@@ -128,7 +128,9 @@ pnpm check
 - MongoDB foundation and Mongoose models: complete
 - Compound unique indexes and verification: complete
 - Multi-document transactions and test harness: complete
-- Authentication and domain implementation: not started
+- Authentication, categories, plans, actuals, period locking, reporting, and demo fixture API: complete
+- Align UI and TanStack Query frontend foundation: complete
+- Frontend authentication and category workflows: not started (Phase 11)
 - Deployment: not created
 - Live URL: not available yet
 

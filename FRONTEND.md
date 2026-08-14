@@ -1,5 +1,9 @@
 # Frontend Specification
 
+## Implementation status
+
+Phase 10 is complete. The repository now contains the shared design tokens and primitives, provider composition, separate public/dashboard layouts, responsive application shell, centralized query keys, and typed API client described in this document. Login/signup forms, session guards, user/logout controls, categories, and all financial workflows remain assigned to later roadmap phases.
+
 ## 1. Product direction
 
 The frontend is an analysis-first B2B finance dashboard. It should feel consistent with the developer's existing Align UI work while using information architecture appropriate to Plan vs Actual.
@@ -41,6 +45,8 @@ Desktop:
 - Page header with title, concise description, and contextual actions.
 - Content maximum width around 1360–1440px while report tables may use the available width.
 - User menu and logout.
+
+The Phase 10 shell uses a non-interactive workspace summary in the account area; Phase 11 replaces it with the authenticated user menu and logout action.
 
 Navigation:
 

@@ -8,6 +8,9 @@
     "moduleResolution": "bundler",
     "noEmit": true,
     "plugins": [{ "name": "next" }],
+    "paths": {
+      "@/*": ["./*"]
+    },
     "resolveJsonModule": true
   },
   "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx"],

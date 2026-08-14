@@ -2,7 +2,7 @@
 
 ## Current repository state
 
-Phases 0–9 are complete. The repository has a verified monorepo foundation, complete MongoDB persistence layer, shared domain primitives, structured error handling, composed Express API shell, complete authentication & session management, complete category domain, complete plan domain, complete actual entry domain, complete financial-period locking domain, authoritative report calculation engine (`GET /v1/reports/plan-vs-actual`), and transactional demo sample data loading (`POST /v1/demo/assignment-sample`). Frontend foundation (Phase 10) has not started. Do not proceed into a later phase unless the user explicitly assigns it from [ROADMAP.md](ROADMAP.md).
+Phases 0–10 are complete. The repository has a verified monorepo foundation, complete MongoDB persistence layer, shared domain primitives, structured error handling, composed Express API shell, complete authentication & session management, complete category domain, complete plan domain, complete actual entry domain, complete financial-period locking domain, authoritative report calculation engine (`GET /v1/reports/plan-vs-actual`), transactional demo sample data loading (`POST /v1/demo/assignment-sample`), and verified Align UI/TanStack Query frontend foundation with public/dashboard layouts, responsive shell, typed API client, and shared product-state primitives. Authentication and category frontend work (Phase 11) has not started. Do not proceed into a later phase unless the user explicitly assigns it from [ROADMAP.md](ROADMAP.md).
 
 ## Read before working
 

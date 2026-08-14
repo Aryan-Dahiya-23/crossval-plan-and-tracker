@@ -1,58 +1,105 @@
-:root {
-  color-scheme: light;
-  font-family:
-    Inter,
-    ui-sans-serif,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    sans-serif;
-  background: #f7f8fa;
-  color: #17191c;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+
+    --bg-strong: 222 32% 8%;
+    --bg-surface: 224 17% 16%;
+    --bg-sub: 219 15% 82%;
+    --bg-soft: 220 18% 90%;
+    --bg-weak: 216 33% 97%;
+    --bg-white: 0 0% 100%;
+
+    --text-strong: 222 32% 8%;
+    --text-sub: 222 11% 36%;
+    --text-soft: 220 11% 64%;
+    --text-disabled: 219 15% 82%;
+    --text-white: 0 0% 100%;
+
+    --stroke-strong: 222 32% 8%;
+    --stroke-sub: 219 15% 82%;
+    --stroke-soft: 220 18% 90%;
+
+    --primary-darker: 228 71% 32%;
+    --primary-base: 228 70% 24%;
+    --primary-alpha: 228 100% 64% / 16%;
+    --primary-lighter: 222 100% 96%;
+
+    --success-dark: 148 73% 16%;
+    --success-base: 148 72% 44%;
+    --success-lighter: 148 72% 93%;
+    --warning-dark: 24 70% 24%;
+    --warning-base: 24 100% 64%;
+    --warning-lighter: 24 100% 96%;
+    --error-dark: 355 70% 24%;
+    --error-base: 355 96% 60%;
+    --error-lighter: 357 100% 96%;
+    --information-dark: 228 70% 24%;
+    --information-base: 228 100% 60%;
+    --information-lighter: 222 100% 96%;
+    --overlay: 209 84% 5% / 32%;
+  }
+
+  .dark {
+    color-scheme: dark;
+    --bg-strong: 0 0% 100%;
+    --bg-surface: 220 18% 90%;
+    --bg-sub: 222 11% 36%;
+    --bg-soft: 221 16% 20%;
+    --bg-weak: 226 21% 12%;
+    --bg-white: 222 32% 8%;
+    --text-strong: 0 0% 100%;
+    --text-sub: 220 11% 64%;
+    --text-soft: 221 8% 48%;
+    --text-disabled: 222 11% 36%;
+    --text-white: 222 32% 8%;
+    --stroke-strong: 0 0% 100%;
+    --stroke-sub: 222 11% 36%;
+    --stroke-soft: 221 16% 20%;
+  }
+
+  * {
+    @apply border-stroke-soft;
+  }
+
+  html {
+    @apply bg-bg-white antialiased;
+  }
+
+  body {
+    @apply min-h-screen bg-bg-white font-sans text-text-strong;
+  }
+
+  ::selection {
+    @apply bg-primary-alpha text-text-strong;
+  }
+
+  :focus-visible {
+    outline: none;
+  }
 }
 
-* {
-  box-sizing: border-box;
+@layer utilities {
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .scrollbar-thin {
+    scrollbar-color: hsl(var(--stroke-sub)) transparent;
+    scrollbar-width: thin;
+  }
 }
 
-body {
-  margin: 0;
-}
-
-.page-shell {
-  display: grid;
-  min-height: 100vh;
-  place-items: center;
-  padding: 24px;
-}
-
-.status-card {
-  width: min(100%, 640px);
-  padding: 32px;
-  border: 1px solid #e1e4e8;
-  border-radius: 16px;
-  background: #ffffff;
-  box-shadow: 0 8px 30px rgb(23 25 28 / 6%);
-}
-
-.status-card h1 {
-  margin: 8px 0 12px;
-  font-size: clamp(28px, 5vw, 42px);
-  line-height: 1.1;
-}
-
-.status-card p {
-  margin: 0;
-  color: #5a616b;
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-.status-card .eyebrow {
-  color: #5c43d2;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

@@ -170,7 +170,7 @@ Only the explicitly assigned phase should be implemented at a time. Every phase 
 - Built report and demo HTTP controllers and mounted routes at `GET /v1/reports/plan-vs-actual` and `POST /v1/demo/assignment-sample` on `/v1`.
 - Added 18 new unit, service, and Supertest integration tests proving exact mathematical match against assignment sample fixture numbers, zero plan percentage `null` behavior, missing actual `-100.00%` behavior, category filtering, clean account guards, and multi-tenant isolation (total 288 tests passing across monorepo).
 
-## Phase 10 — Frontend foundation
+## Phase 10 — Frontend foundation (Complete)
 
 **Objective:** Establish Align UI design tokens/primitives, providers, auth layouts, and dashboard shell.
 
@@ -189,6 +189,15 @@ Only the explicitly assigned phase should be implemented at a time. Every phase 
 **Checks:** Lint/typecheck/build, keyboard and responsive manual QA.
 
 **Non-goals:** Full business workflows or copied reference pages.
+
+**Implemented result:**
+
+- Established an Align UI-derived semantic token system with reusable button, icon-button, badge, tooltip, drawer, skeleton, empty-state, error-state, and page-header primitives.
+- Added separate public authentication and dashboard route-group layouts, a responsive 1440px content frame, collapsible desktop sidebar with keyboard shortcut, and focus-trapped mobile navigation drawer.
+- Added a centralized TanStack Query client with bounded retry behavior, no retries for authentication/client errors, mutation retries disabled, normalized query-key factories, and development-only Query Devtools.
+- Added a typed `/api/v1` client with credentialed requests, abort-signal support, no-content handling, Zod success parsing, canonical structured-error conversion, and safe malformed/network error fallbacks.
+- Added 10 focused frontend unit tests covering API contracts, structured errors, retry policy, and deterministic query keys.
+- Verified production build, keyboard navigation, mobile drawer focus/route behavior, public/dashboard separation, and responsive layouts at 375px, 768px, 1024px, and 1440px without horizontal overflow.
 
 ## Phase 11 — Authentication and category frontend
 

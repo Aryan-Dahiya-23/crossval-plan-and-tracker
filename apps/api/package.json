@@ -1,0 +1,25 @@
+{
+  "name": "@crossval/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/server.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "db:verify-indexes": "tsx src/database/verify-indexes-cli.ts",
+    "db:ensure-indexes": "tsx src/database/ensure-indexes-cli.ts"
+  },
+  "dependencies": {
+    "@crossval/contracts": "workspace:*",
+    "cookie-parser": "^1.4.7",
+    "express": "5.2.1",
+    "mongoose": "^9.9.2",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^11.2.0"
+  }
+}

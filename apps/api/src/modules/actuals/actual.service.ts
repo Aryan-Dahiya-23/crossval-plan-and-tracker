@@ -2,15 +2,17 @@ import type {
   ActualDto,
   ActualsResponse,
   CreateActualRequest,
+  ImportActualsRequest,
   ListActualsQuery,
   UpdateActualRequest,
 } from '@crossval/contracts';
 import { Types } from 'mongoose';
 
 import { runInTransaction } from '../../database/transactions.js';
-import { NotFoundError } from '../../http/errors.js';
+import { NotFoundError, ValidationError } from '../../http/errors.js';
 import { jsonStringToMinor, minorToJsonString } from '../../shared/money.js';
 import { apiMonthToDbKey, dbKeyToApiMonth } from '../../shared/month.js';
+import { CategoryModel } from '../categories/category.model.js';
 import { assertActiveCategory } from '../categories/category.service.js';
 import { assertPeriodOpenAndCoordinate } from '../periods/period-coordination.service.js';
 import { decodeActualCursor, encodeActualCursor } from './actual-cursor.js';
@@ -65,6 +67,85 @@ export async function createActual(
 
     await actual.save({ session });
     return toActualDto(actual);
+  });
+}
+
+/**
+ * Imports multiple actual expense entries from a parsed CSV row list in a single replica-set transaction.
+ *
+ * Rules:
+ * 1. For every row, matches `categoryName` against the user's active categories (case-insensitive trim match).
+ *    If a category is not found or archived, throws ValidationError with the offending category name.
+ * 2. Every unique month present in the batch must be OPEN. Transaction coordinates all affected periods.
+ * 3. All entries are created atomically.
+ */
+export async function importActuals(
+  userId: Types.ObjectId,
+  input: ImportActualsRequest,
+): Promise<{ importedCount: number; actuals: ActualDto[] }> {
+  return runInTransaction(async (session) => {
+    // 1. Fetch user's active categories
+    const categories = await CategoryModel.find({ userId, archivedAt: null })
+      .session(session)
+      .exec();
+    const categoryMap = new Map<string, Types.ObjectId>();
+    for (const cat of categories) {
+      categoryMap.set(cat.name.toLowerCase().trim(), cat._id);
+    }
+
+    // 2. Validate all categories and collect unique month keys
+    const uniqueMonthKeys = new Set<number>();
+    const preparedEntries: Array<{
+      categoryId: Types.ObjectId;
+      monthKey: number;
+      amountMinor: bigint;
+      note: string | null;
+    }> = [];
+
+    for (let i = 0; i < input.rows.length; i++) {
+      const row = input.rows[i]!;
+      const categoryId = categoryMap.get(row.categoryName.toLowerCase().trim());
+      if (!categoryId) {
+        throw new ValidationError(
+          `Row ${i + 1}: Category "${row.categoryName}" does not exist or is archived.`,
+        );
+      }
+
+      const monthKey = apiMonthToDbKey(row.month);
+      uniqueMonthKeys.add(monthKey);
+
+      preparedEntries.push({
+        categoryId,
+        monthKey,
+        amountMinor: jsonStringToMinor(row.amountMinor),
+        note: row.note ? row.note.trim() : null,
+      });
+    }
+
+    // 3. Coordinate all affected periods in sorted order to avoid deadlock
+    const sortedMonthKeys = Array.from(uniqueMonthKeys).sort((a, b) => a - b);
+    for (const mk of sortedMonthKeys) {
+      await assertPeriodOpenAndCoordinate(userId, mk, session);
+    }
+
+    // 4. Create all actuals
+    const docs = preparedEntries.map(
+      (entry) =>
+        new ActualModel({
+          userId,
+          categoryId: entry.categoryId,
+          monthKey: entry.monthKey,
+          amountMinor: entry.amountMinor,
+          note: entry.note,
+        }),
+    );
+
+    const savedDocs = await ActualModel.insertMany(docs, { session });
+
+    return {
+      importedCount: savedDocs.length,
+      actuals: savedDocs.map(toActualDto),
+    };
   });
 }
 

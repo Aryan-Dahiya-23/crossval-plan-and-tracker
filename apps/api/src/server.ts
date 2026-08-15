@@ -48,11 +48,38 @@ const corsOrigins = process.env.CORS_ORIGINS
 
 const app = createApp({ corsOrigins });
 
+let devReplSet: { stop: () => Promise<boolean>; getUri: () => string } | null = null;
+
 async function startServer(): Promise<void> {
-  if (mongoUri) {
+  let activeUri = mongoUri;
+  const isPlaceholderOrMissing = !activeUri || activeUri.includes('<');
+
+  if (isPlaceholderOrMissing) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('A valid MONGODB_URI environment variable is required in production.');
+    }
+    console.log(
+      'No valid external MONGODB_URI found. Starting local in-memory MongoDB replica set for development...',
+    );
+    try {
+      const { MongoMemoryReplSet } = await import('mongodb-memory-server');
+      devReplSet = await MongoMemoryReplSet.create({
+        replSet: {
+          count: 1,
+          storageEngine: 'wiredTiger',
+        },
+      });
+      activeUri = devReplSet.getUri();
+      console.log('Local in-memory MongoDB replica set started.');
+    } catch (err) {
+      console.error('Failed to start local in-memory MongoDB:', err);
+    }
+  }
+
+  if (activeUri) {
     try {
       await connectDatabase({
-        uri: mongoUri,
+        uri: activeUri,
         ...(mongoDbName ? { dbName: mongoDbName } : {}),
       });
       console.log('Connected to MongoDB.');
@@ -71,6 +98,10 @@ async function startServer(): Promise<void> {
       console.log('HTTP server closed.');
       await disconnectDatabase();
       console.log('MongoDB disconnected.');
+      if (devReplSet) {
+        await devReplSet.stop();
+        console.log('Local in-memory MongoDB replica set stopped.');
+      }
       process.exit(0);
     });
 

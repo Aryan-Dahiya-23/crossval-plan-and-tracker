@@ -91,6 +91,23 @@
     scrollbar-color: hsl(var(--stroke-sub)) transparent;
     scrollbar-width: thin;
   }
+
+  /* Optical alignment for Remix Icon glyphs */
+  .remixicon path {
+    transform: scale(0.8996);
+    transform-origin: center;
+  }
+
+  .mask-exclude {
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -2,7 +2,7 @@ import { RiLock2Line, RiMailLine, RiUserAddLine, RiUserLine } from '@remixicon/r
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
-import { Button } from '../ui/button';
+import * as Button from '../ui/button';
 
 type AuthFoundationProps = {
   mode: 'login' | 'signup';
@@ -19,8 +19,8 @@ function FieldPreview({
 }) {
   return (
     <div>
-      <div className="mb-1.5 text-label-sm text-text-strong-950">{label}</div>
-      <div className="flex h-10 items-center gap-2.5 rounded-10 bg-bg-white-0 px-3 text-text-disabled-300 shadow-regular-xs ring-1 ring-inset ring-stroke-soft-200">
+      <div className="mb-1.5 text-label-sm text-text-strong">{label}</div>
+      <div className="flex h-10 items-center gap-2.5 rounded-10 bg-bg-white px-3 text-text-disabled shadow-regular-xs ring-1 ring-inset ring-stroke-soft-200">
         <span className="[&>svg]:size-5">{icon}</span>
         <span className="text-paragraph-sm">{placeholder}</span>
       </div>
@@ -34,8 +34,8 @@ export function AuthFoundation({ mode }: AuthFoundationProps) {
   return (
     <>
       <div className="flex flex-col items-center gap-2">
-        <div className="relative flex size-[76px] shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-bg-soft-200/70 to-transparent p-px lg:size-24">
-          <div className="grid size-14 place-items-center rounded-full bg-bg-white-0 text-text-sub-600 shadow-regular-xs ring-1 ring-inset ring-stroke-soft-200 lg:size-16">
+        <div className="relative flex size-[76px] shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-bg-soft/70 to-transparent p-px lg:size-24">
+          <div className="grid size-14 place-items-center rounded-full bg-bg-white text-text-sub shadow-regular-xs ring-1 ring-inset ring-stroke-soft-200 lg:size-16">
             {isLogin ? (
               <RiUserLine className="size-7" aria-hidden="true" />
             ) : (
@@ -44,10 +44,10 @@ export function AuthFoundation({ mode }: AuthFoundationProps) {
           </div>
         </div>
         <div className="space-y-1 text-center">
-          <h1 className="text-title-h6 font-semibold text-text-strong-950">
+          <h1 className="text-title-h6 font-medium text-text-strong">
             {isLogin ? 'Welcome back' : 'Create your account'}
           </h1>
-          <p className="text-paragraph-sm text-text-sub-600 lg:text-paragraph-md">
+          <p className="text-paragraph-sm text-text-sub lg:text-paragraph-md">
             {isLogin
               ? 'Enter your details to access your financial workspace.'
               : 'Start planning and tracking your monthly spending.'}
@@ -61,19 +61,19 @@ export function AuthFoundation({ mode }: AuthFoundationProps) {
         )}
         <FieldPreview icon={<RiMailLine />} label="Email address" placeholder="you@example.com" />
         <FieldPreview icon={<RiLock2Line />} label="Password" placeholder="••••••••" />
-        <Button fullWidth disabled>
+        <Button.Root className="w-full" disabled>
           {isLogin ? 'Log in' : 'Create account'}
-        </Button>
-        <p className="text-center text-paragraph-xs text-text-soft-400">
+        </Button.Root>
+        <p className="text-center text-paragraph-xs text-text-soft">
           Authentication becomes active in Phase 11.
         </p>
       </div>
 
-      <p className="text-center text-paragraph-sm text-text-sub-600">
+      <p className="text-center text-paragraph-sm text-text-sub">
         {isLogin ? 'New to the tracker?' : 'Already have an account?'}{' '}
         <Link
           href={isLogin ? '/signup' : '/login'}
-          className="font-medium text-primary-base hover:text-primary-darker focus-visible:rounded focus-visible:shadow-button-focus"
+          className="font-medium text-primary-base hover:text-primary-darker focus-visible:rounded focus-visible:shadow-button-primary-focus"
         >
           {isLogin ? 'Create an account' : 'Log in'}
         </Link>

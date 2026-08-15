@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { ThemeProvider } from 'next-themes';
 import { useState, type ReactNode } from 'react';
 
+import { ToastProvider } from '@/src/components/ui/toast';
 import { TooltipProvider } from '@/src/components/ui/tooltip';
 import { createQueryClient } from '@/src/lib/query-client';
 
@@ -22,7 +23,9 @@ export function AppProviders({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
       <QueryClientProvider client={queryClient}>
-        <TooltipProvider delayDuration={300}>{children}</TooltipProvider>
+        <ToastProvider>
+          <TooltipProvider delayDuration={300}>{children}</TooltipProvider>
+        </ToastProvider>
         {QueryDevtools && <QueryDevtools initialIsOpen={false} />}
       </QueryClientProvider>
     </ThemeProvider>

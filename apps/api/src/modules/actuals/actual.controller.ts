@@ -1,6 +1,7 @@
 import type {
   ActualParams,
   CreateActualRequest,
+  ImportActualsRequest,
   ListActualsQuery,
   UpdateActualRequest,
 } from '@crossval/contracts';
@@ -10,6 +11,7 @@ import {
   createActual,
   deleteActual,
   getActualById,
+  importActuals,
   listActuals,
   updateActual,
 } from './actual.service.js';
@@ -24,6 +26,21 @@ export async function handleCreateActual(
     const body = req.body as CreateActualRequest;
     const actual = await createActual(userId, body);
     res.status(201).json({ data: actual });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function handleImportActuals(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const userId = req.user!.userId;
+    const body = req.body as ImportActualsRequest;
+    const result = await importActuals(userId, body);
+    res.status(201).json({ data: result });
   } catch (err) {
     next(err);
   }

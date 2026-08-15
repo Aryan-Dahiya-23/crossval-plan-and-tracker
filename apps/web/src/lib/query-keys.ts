@@ -1,11 +1,11 @@
 type CategoryFilters = {
-  includeArchived?: boolean;
+  includeArchived?: boolean | undefined;
 };
 
 type MonthFilters = {
-  fromMonth?: string;
-  toMonth?: string;
-  categoryId?: string;
+  fromMonth?: string | undefined;
+  toMonth?: string | undefined;
+  categoryId?: string | undefined;
 };
 
 function compactFilters<T extends Record<string, unknown>>(filters: T) {

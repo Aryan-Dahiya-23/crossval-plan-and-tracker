@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "buildCommand": "pnpm --filter @crossval/contracts build && pnpm --filter @crossval/api build",
+  "builds": [
+    {
+      "src": "dist/serverless.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "dist/serverless.js"
+    }
+  ]
+}

@@ -15,6 +15,7 @@ import {
   createActual,
   deleteActual,
   getActualById,
+  importActuals,
   listActuals,
   updateActual,
 } from './actual.service.js';
@@ -488,6 +489,87 @@ describe('actual.service', () => {
       });
 
       await expect(deleteActual(userBId, created.id)).rejects.toThrow(NotFoundError);
+    });
+  });
+
+  describe('importActuals', () => {
+    it('successfully imports multiple actuals matching active categories by name', async () => {
+      const result = await importActuals(userAId, {
+        rows: [
+          {
+            month: '2026-01',
+            categoryName: 'Marketing',
+            amountMinor:
+              '480000' as unknown as import('@crossval/contracts').PositiveMoneyMinorString,
+            note: 'Ad campaign',
+          },
+          {
+            month: '2026-01',
+            categoryName: 'engineering',
+            amountMinor:
+              '2050000' as unknown as import('@crossval/contracts').PositiveMoneyMinorString,
+          },
+          {
+            month: '2026-02',
+            categoryName: 'Engineering',
+            amountMinor:
+              '1980000' as unknown as import('@crossval/contracts').PositiveMoneyMinorString,
+          },
+        ],
+      });
+
+      expect(result.importedCount).toBe(3);
+      expect(result.actuals).toHaveLength(3);
+
+      const dbEntries = await ActualModel.find({ userId: userAId });
+      expect(dbEntries).toHaveLength(3);
+    });
+
+    it('rejects import with ValidationError when category does not exist', async () => {
+      await expect(
+        importActuals(userAId, {
+          rows: [
+            {
+              month: '2026-01',
+              categoryName: 'NonExistentCategory',
+              amountMinor:
+                '10000' as unknown as import('@crossval/contracts').PositiveMoneyMinorString,
+            },
+          ],
+        }),
+      ).rejects.toThrow('Category "NonExistentCategory" does not exist or is archived.');
+    });
+
+    it('rejects import when any period in the batch is locked', async () => {
+      // Lock 2026-02
+      await FinancialPeriodModel.updateOne(
+        { userId: userAId, monthKey: 202602 },
+        { $set: { status: 'LOCKED', lockedAt: new Date(), version: 1 } },
+        { upsert: true },
+      );
+
+      await expect(
+        importActuals(userAId, {
+          rows: [
+            {
+              month: '2026-01',
+              categoryName: 'Marketing',
+              amountMinor:
+                '480000' as unknown as import('@crossval/contracts').PositiveMoneyMinorString,
+            },
+            {
+              month: '2026-02',
+              categoryName: 'Engineering',
+              amountMinor:
+                '1980000' as unknown as import('@crossval/contracts').PositiveMoneyMinorString,
+            },
+          ],
+        }),
+      ).rejects.toThrow(PeriodLockedError);
+
+      // Verify transaction rollback - zero entries created
+      const count = await ActualModel.countDocuments({ userId: userAId });
+      expect(count).toBe(0);
     });
   });
 });

@@ -1,31 +1,33 @@
 'use client';
 
-import { RiArrowLeftSLine, RiArrowRightSLine, RiMenu3Line, RiWallet3Line } from '@remixicon/react';
+import {
+  RiArrowLeftSLine,
+  RiArrowRightSLine,
+  RiMenu3Line,
+  RiPriceTag3Line,
+} from '@remixicon/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState, type ReactNode } from 'react';
 
-import { cn } from '@/src/lib/cn';
-
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '../ui/drawer';
-import { IconButton } from '../ui/icon-button';
+import { cn } from '../../utils/cn';
+import { CategoryDrawer } from '../categories/category-drawer';
+import * as CompactButton from '../ui/compact-button';
+import * as Divider from '../ui/divider';
+import * as Drawer from '../ui/drawer';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { Brand } from './brand';
 import { isNavigationItemActive, primaryNavigation } from './navigation';
+import { UserButton } from './user-button';
 
 function NavigationLinks({
   collapsed = false,
   onNavigate,
+  onOpenCategories,
 }: {
   collapsed?: boolean;
   onNavigate?: () => void;
+  onOpenCategories?: () => void;
 }) {
   const pathname = usePathname();
 
@@ -41,26 +43,29 @@ function NavigationLinks({
             {...(onNavigate ? { onClick: onNavigate } : {})}
             className={cn(
               'group relative flex h-10 items-center gap-3 rounded-lg text-label-sm text-text-sub-600',
-              'transition duration-200 ease-productive hover:bg-bg-weak-50 hover:text-text-strong-950',
-              'focus-visible:shadow-button-focus',
-              active && 'bg-bg-weak-50 text-text-strong-950',
+              'transition duration-200 ease-out hover:bg-bg-weak-50 hover:text-text-strong',
+              'focus-visible:shadow-button-important-focus focus-visible:outline-none',
+              active && 'bg-bg-weak-50 text-text-strong font-medium',
               collapsed ? 'w-10 justify-center' : 'w-full px-3',
             )}
           >
             <span
               className={cn(
-                'absolute -left-5 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-primary-base transition-transform',
+                'absolute -left-5 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-primary-base transition-transform duration-200',
                 active ? 'scale-y-100' : 'scale-y-0',
               )}
               aria-hidden="true"
             />
             <Icon
-              className={cn('size-5 shrink-0', active && 'text-primary-base')}
+              className={cn(
+                'size-5 shrink-0 text-text-sub-600 transition-colors',
+                active && 'text-primary-base',
+              )}
               aria-hidden="true"
             />
             {!collapsed && <span className="min-w-0 flex-1 truncate">{label}</span>}
             {!collapsed && active && (
-              <RiArrowRightSLine className="size-4 shrink-0" aria-hidden="true" />
+              <RiArrowRightSLine className="size-4 shrink-0 text-text-sub-600" aria-hidden="true" />
             )}
           </Link>
         );
@@ -74,79 +79,96 @@ function NavigationLinks({
           </Tooltip>
         );
       })}
+
+      {/* Categories Trigger Item */}
+      {onOpenCategories && (
+        <div className="pt-2">
+          {collapsed ? (
+            <Tooltip delayDuration={250}>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  aria-label="Manage Categories"
+                  onClick={onOpenCategories}
+                  className="group relative flex h-10 w-10 items-center justify-center rounded-lg text-label-sm text-text-sub-600 transition duration-200 ease-out hover:bg-bg-weak-50 hover:text-text-strong focus-visible:shadow-button-important-focus focus-visible:outline-none cursor-pointer"
+                >
+                  <RiPriceTag3Line className="size-5 shrink-0" aria-hidden="true" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right">Categories</TooltipContent>
+            </Tooltip>
+          ) : (
+            <button
+              type="button"
+              onClick={onOpenCategories}
+              className="group relative flex h-10 w-full items-center gap-3 rounded-lg px-3 text-label-sm text-text-sub-600 transition duration-200 ease-out hover:bg-bg-weak-50 hover:text-text-strong focus-visible:shadow-button-important-focus focus-visible:outline-none cursor-pointer"
+            >
+              <RiPriceTag3Line className="size-5 shrink-0" aria-hidden="true" />
+              <span className="min-w-0 flex-1 truncate text-left">Categories</span>
+            </button>
+          )}
+        </div>
+      )}
     </nav>
   );
 }
 
-function WorkspaceSummary({ collapsed = false }: { collapsed?: boolean }) {
-  return (
-    <div
-      className={cn(
-        'flex items-center rounded-10 bg-bg-white-0',
-        collapsed ? 'size-10 justify-center' : 'gap-3 p-3',
-      )}
-    >
-      <span className="grid size-10 shrink-0 place-items-center rounded-full bg-warning-lighter text-warning-dark ring-1 ring-inset ring-warning-base/20">
-        <RiWallet3Line className="size-5" aria-hidden="true" />
-      </span>
-      {!collapsed && (
-        <span className="min-w-0 flex-1">
-          <span className="block truncate text-label-sm text-text-strong-950">Plan vs Actual</span>
-          <span className="block truncate text-paragraph-xs text-text-sub-600">
-            Personal workspace
-          </span>
-        </span>
-      )}
-    </div>
-  );
-}
-
-function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
+function Sidebar({
+  collapsed,
+  onOpenCategories,
+  onToggle,
+}: {
+  collapsed: boolean;
+  onOpenCategories: () => void;
+  onToggle: () => void;
+}) {
   return (
     <aside
       className={cn(
-        'fixed inset-y-0 left-0 z-40 hidden flex-col border-r border-stroke-soft-200 bg-bg-white-0 transition-[width] duration-300 ease-productive lg:flex',
-        collapsed ? 'w-[80px]' : 'w-[272px]',
+        'fixed inset-y-0 left-0 z-40 hidden flex-col border-r border-stroke-soft-200 bg-bg-white transition-all duration-300 ease-out lg:flex',
+        collapsed ? 'w-[82px]' : 'w-[272px]',
       )}
     >
       <div className={cn('flex h-[68px] shrink-0 items-center', collapsed ? 'px-5' : 'px-5')}>
         <Brand collapsed={collapsed} />
       </div>
 
-      <div
-        className={cn(
-          'flex flex-1 flex-col overflow-hidden border-t border-stroke-soft-200 py-5',
-          'px-5',
-        )}
-      >
+      <div className="px-5">
+        <Divider.Root className="transition-all duration-300" />
+      </div>
+
+      <div className={cn('flex flex-1 flex-col overflow-hidden py-5', collapsed ? 'px-5' : 'px-5')}>
         {!collapsed && (
-          <p className="mb-3 px-3 text-subheading-xs uppercase text-text-soft">Workspace</p>
+          <p className="mb-3 px-3 text-subheading-xs uppercase text-text-soft-400 font-medium tracking-wider">
+            Workspace
+          </p>
         )}
-        <NavigationLinks collapsed={collapsed} />
+        <NavigationLinks collapsed={collapsed} onOpenCategories={onOpenCategories} />
 
         <div className="mt-auto space-y-3 pt-6">
-          <WorkspaceSummary collapsed={collapsed} />
+          <Divider.Root className="transition-all duration-300" />
+          <UserButton collapsed={collapsed} onOpenCategories={onOpenCategories} />
         </div>
       </div>
 
       <Tooltip delayDuration={250}>
         <TooltipTrigger asChild>
-          <IconButton
+          <CompactButton.Root
             variant="stroke"
-            size="small"
+            size="large"
             onClick={onToggle}
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             aria-expanded={!collapsed}
             className={cn(
-              'absolute top-[18px] z-50 bg-bg-white-0 transition-[right] duration-300',
-              collapsed ? '-right-4' : 'right-4',
+              'absolute top-[18px] z-50 bg-bg-white shadow-regular-xs transition-all duration-300 hover:bg-bg-weak-50',
+              collapsed ? '-right-3.5' : 'right-4',
             )}
           >
-            <RiArrowLeftSLine
-              className={cn('size-5 transition-transform', collapsed && 'rotate-180')}
-              aria-hidden="true"
+            <CompactButton.Icon
+              as={RiArrowLeftSLine}
+              className={cn('size-5 transition-transform duration-200', collapsed && 'rotate-180')}
             />
-          </IconButton>
+          </CompactButton.Root>
         </TooltipTrigger>
         <TooltipContent side="right">
           {collapsed ? 'Expand sidebar' : 'Collapse sidebar'} (⌘B)
@@ -156,40 +178,49 @@ function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => 
   );
 }
 
-function MobileHeader() {
+function MobileHeader({ onOpenCategories }: { onOpenCategories: () => void }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 flex h-[60px] items-center justify-between border-b border-stroke-soft-200 bg-bg-white-0/95 px-4 backdrop-blur lg:hidden">
+    <header className="sticky top-0 z-40 flex h-[60px] items-center justify-between border-b border-stroke-soft-200 bg-bg-white/95 px-4 backdrop-blur lg:hidden">
       <Brand />
-      <Drawer open={open} onOpenChange={setOpen}>
-        <DrawerTrigger asChild>
-          <IconButton variant="stroke" aria-label="Open navigation" aria-expanded={open}>
-            <RiMenu3Line className="size-5" aria-hidden="true" />
-          </IconButton>
-        </DrawerTrigger>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle className="text-label-md text-text-strong">Navigation</DrawerTitle>
-            <DrawerDescription className="sr-only">
+      <Drawer.Root open={open} onOpenChange={setOpen}>
+        <Drawer.Trigger asChild>
+          <CompactButton.Root variant="stroke" size="large" aria-label="Open navigation">
+            <CompactButton.Icon as={RiMenu3Line} />
+          </CompactButton.Root>
+        </Drawer.Trigger>
+        <Drawer.Content>
+          <Drawer.Header>
+            <Drawer.Title className="text-label-md text-text-strong">Navigation</Drawer.Title>
+            <Drawer.Description className="sr-only">
               Navigate between the financial overview, planning, actuals, and report pages.
-            </DrawerDescription>
-          </DrawerHeader>
-          <div className="flex flex-1 flex-col p-4">
-            <p className="mb-3 px-3 text-subheading-xs uppercase text-text-soft">Workspace</p>
-            <NavigationLinks onNavigate={() => setOpen(false)} />
+            </Drawer.Description>
+          </Drawer.Header>
+          <Drawer.Body className="flex flex-1 flex-col p-4">
+            <p className="mb-3 px-3 text-subheading-xs uppercase text-text-soft-400 font-medium tracking-wider">
+              Workspace
+            </p>
+            <NavigationLinks
+              onNavigate={() => setOpen(false)}
+              onOpenCategories={() => {
+                setOpen(false);
+                onOpenCategories();
+              }}
+            />
             <div className="mt-auto pt-8">
-              <WorkspaceSummary />
+              <UserButton onOpenCategories={onOpenCategories} />
             </div>
-          </div>
-        </DrawerContent>
-      </Drawer>
+          </Drawer.Body>
+        </Drawer.Content>
+      </Drawer.Root>
     </header>
   );
 }
 
 export function AppShell({ children }: Readonly<{ children: ReactNode }>) {
   const [collapsed, setCollapsed] = useState(false);
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -208,17 +239,24 @@ export function AppShell({ children }: Readonly<{ children: ReactNode }>) {
   };
 
   return (
-    <div className="min-h-screen bg-bg-white-0">
-      <Sidebar collapsed={collapsed} onToggle={toggleSidebar} />
+    <div className="min-h-screen bg-bg-white">
+      <Sidebar
+        collapsed={collapsed}
+        onOpenCategories={() => setCategoriesOpen(true)}
+        onToggle={toggleSidebar}
+      />
       <div
         className={cn(
-          'min-h-screen transition-[padding] duration-300 ease-productive',
-          collapsed ? 'lg:pl-[80px]' : 'lg:pl-[272px]',
+          'min-h-screen transition-[padding] duration-300 ease-out',
+          collapsed ? 'lg:pl-[82px]' : 'lg:pl-[272px]',
         )}
       >
-        <MobileHeader />
+        <MobileHeader onOpenCategories={() => setCategoriesOpen(true)} />
         <main className="mx-auto w-full max-w-[1440px]">{children}</main>
       </div>
+
+      <CategoryDrawer open={categoriesOpen} onOpenChange={setCategoriesOpen} />
     </div>
   );
 }
+export default AppShell;

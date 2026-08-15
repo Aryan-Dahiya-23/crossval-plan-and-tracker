@@ -27,6 +27,8 @@ import {
   listActualsQuerySchema,
   listCategoriesQuerySchema,
   listPeriodsQuerySchema,
+  importActualsRequestSchema,
+  importActualsResponseSchema,
   listPlansQuerySchema,
   loadDemoSampleResponseSchema,
   lockPeriodParamsSchema,
@@ -210,11 +212,11 @@ describe('auth schemas', () => {
     expect(
       signupRequestSchema.parse({
         email: '  test@example.com  ',
-        password: 'password123',
+        password: '123456',
       }),
     ).toEqual({
       email: 'test@example.com',
-      password: 'password123',
+      password: '123456',
     });
 
     expect(() =>
@@ -227,7 +229,7 @@ describe('auth schemas', () => {
     expect(() =>
       signupRequestSchema.parse({
         email: 'test@example.com',
-        password: 'short',
+        password: 'short', // 5 chars
       }),
     ).toThrow();
   });
@@ -577,6 +579,46 @@ describe('actual contracts', () => {
       nextCursor: null,
       hasMore: false,
     });
+  });
+
+  it('validates importActualsRequestSchema and importActualsResponseSchema', () => {
+    const validBatch = {
+      rows: [
+        { month: '2026-01', categoryName: 'Marketing', amountMinor: '480000', note: 'Ads' },
+        { month: '2026-02', categoryName: 'Payroll', amountMinor: '2050000', note: null },
+      ],
+    };
+
+    expect(importActualsRequestSchema.parse(validBatch)).toEqual(validBatch);
+
+    // Empty rows array is rejected
+    expect(() => importActualsRequestSchema.parse({ rows: [] })).toThrow();
+
+    // Invalid month format is rejected
+    expect(() =>
+      importActualsRequestSchema.parse({
+        rows: [{ month: '2026-13', categoryName: 'Marketing', amountMinor: '1000' }],
+      }),
+    ).toThrow();
+
+    // Response envelope
+    const resPayload = {
+      data: {
+        importedCount: 2,
+        actuals: [
+          {
+            id: actualId,
+            categoryId: catId,
+            month: '2026-01',
+            amountMinor: '480000',
+            note: 'Ads',
+            createdAt: '2026-08-15T00:00:00.000Z',
+            updatedAt: '2026-08-15T00:00:00.000Z',
+          },
+        ],
+      },
+    };
+    expect(importActualsResponseSchema.parse(resPayload)).toEqual(resPayload);
   });
 
   it('validates actualDto and response envelopes', () => {

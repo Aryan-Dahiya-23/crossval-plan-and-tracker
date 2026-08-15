@@ -1,17 +1,35 @@
-import type { HTMLAttributes } from 'react';
-import { tv, type VariantProps } from 'tailwind-variants';
+// AlignUI Divider v0.0.0
 
-const dividerVariants = tv({
+import * as React from 'react';
+
+import { tv, type VariantProps } from '../../utils/tv';
+
+const DIVIDER_ROOT_NAME = 'DividerRoot';
+
+export const dividerVariants = tv({
   base: 'relative flex w-full items-center',
   variants: {
     variant: {
-      line: 'h-px bg-stroke-soft-200',
-      spacing:
-        'h-4 before:absolute before:left-0 before:top-1/2 before:h-px before:w-full before:-translate-y-1/2 before:bg-stroke-soft-200',
-      text: [
-        'gap-2.5 text-[0.6875rem] font-medium uppercase leading-3 tracking-[0.02em] text-text-soft-400',
-        'before:h-px before:flex-1 before:bg-stroke-soft-200',
-        'after:h-px after:flex-1 after:bg-stroke-soft-200',
+      line: 'h-0 before:absolute before:left-0 before:top-1/2 before:h-px before:w-full before:-translate-y-1/2 before:bg-stroke-soft-200',
+      'line-spacing': [
+        'h-1',
+        'before:absolute before:left-0 before:top-1/2 before:h-px before:w-full before:-translate-y-1/2 before:bg-stroke-soft-200',
+      ],
+      'line-text': [
+        'gap-2.5',
+        'text-subheading-2xs text-text-soft-400',
+        'before:h-px before:w-full before:flex-1 before:bg-stroke-soft-200',
+        'after:h-px after:w-full after:flex-1 after:bg-stroke-soft-200',
+      ],
+      content: [
+        'gap-2.5',
+        'before:h-px before:w-full before:flex-1 before:bg-stroke-soft-200',
+        'after:h-px after:w-full after:flex-1 after:bg-stroke-soft-200',
+      ],
+      text: ['px-2 py-1', 'text-subheading-xs text-text-soft-400'],
+      'solid-text': [
+        'bg-bg-weak-50 px-5 py-1.5 uppercase',
+        'text-subheading-xs text-text-soft-400 font-medium tracking-wider',
       ],
     },
   },
@@ -20,8 +38,16 @@ const dividerVariants = tv({
   },
 });
 
-type DividerProps = HTMLAttributes<HTMLDivElement> & VariantProps<typeof dividerVariants>;
-
-export function Divider({ className, variant, ...props }: DividerProps) {
-  return <div role="separator" className={dividerVariants({ className, variant })} {...props} />;
+function Divider({
+  className,
+  variant,
+  ...rest
+}: React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof dividerVariants>) {
+  return (
+    <div role="separator" className={dividerVariants({ variant, class: className })} {...rest} />
+  );
 }
+Divider.displayName = DIVIDER_ROOT_NAME;
+
+export { Divider as Root, Divider };
+export default Divider;

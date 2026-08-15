@@ -521,6 +521,63 @@ describe('Actuals Routes Integration', () => {
     });
   });
 
+  describe('POST /v1/actuals/import', () => {
+    it('successfully imports batch of actuals from CSV rows and returns 201', async () => {
+      const res = await request(app)
+        .post('/v1/actuals/import')
+        .set('Cookie', user1Cookie)
+        .send({
+          rows: [
+            {
+              month: '2026-01',
+              categoryName: 'Marketing',
+              amountMinor: '480000',
+              note: 'Import 1',
+            },
+            { month: '2026-01', categoryName: 'Engineering', amountMinor: '2050000' },
+            { month: '2026-02', categoryName: 'Engineering', amountMinor: '1980000' },
+          ],
+        });
+
+      expect(res.status).toBe(201);
+      expect(res.body.data.importedCount).toBe(3);
+      expect(res.body.data.actuals).toHaveLength(3);
+    });
+
+    it('rejects batch import when category name does not exist with 422 VALIDATION_ERROR', async () => {
+      const res = await request(app)
+        .post('/v1/actuals/import')
+        .set('Cookie', user1Cookie)
+        .send({
+          rows: [{ month: '2026-01', categoryName: 'UnknownCategory', amountMinor: '480000' }],
+        });
+
+      expect(res.status).toBe(422);
+      const parsed = apiErrorResponseSchema.parse(res.body);
+      expect(parsed.error.code).toBe('VALIDATION_ERROR');
+    });
+
+    it('rejects batch import when a period is locked with 409 PERIOD_LOCKED', async () => {
+      // Lock 2026-01 for user1
+      await FinancialPeriodModel.updateOne(
+        { userId: user1Id, monthKey: 202601 },
+        { $set: { status: 'LOCKED', lockedAt: new Date(), version: 1 } },
+        { upsert: true },
+      );
+
+      const res = await request(app)
+        .post('/v1/actuals/import')
+        .set('Cookie', user1Cookie)
+        .send({
+          rows: [{ month: '2026-01', categoryName: 'Marketing', amountMinor: '480000' }],
+        });
+
+      expect(res.status).toBe(409);
+      const parsed = apiErrorResponseSchema.parse(res.body);
+      expect(parsed.error.code).toBe('PERIOD_LOCKED');
+    });
+  });
+
   describe('Unauthenticated requests', () => {
     it('returns 401 AUTHENTICATION_REQUIRED for unauthenticated access', async () => {
       const res = await request(app).get('/v1/actuals');

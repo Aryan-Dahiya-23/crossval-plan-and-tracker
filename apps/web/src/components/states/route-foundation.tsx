@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 
-import { Divider } from '../ui/divider';
+import * as Divider from '../ui/divider';
 import { Skeleton } from '../ui/skeleton';
-import { WidgetBox, WidgetHeader } from '../ui/widget-box';
+import * as WidgetBox from '../ui/widget-box';
 
 type RouteFoundationProps = {
   icon: ReactNode;
@@ -13,12 +13,17 @@ type RouteFoundationProps = {
 export function RouteFoundation({ description, icon, title }: RouteFoundationProps) {
   return (
     <div className="px-4 pb-6 lg:px-8 lg:pt-1">
-      <WidgetBox>
-        <WidgetHeader icon={icon}>{title}</WidgetHeader>
-        <Divider />
+      <WidgetBox.Root>
+        <WidgetBox.Header>
+          <div className="flex items-center gap-2">
+            <span>{icon}</span>
+            <span>{title}</span>
+          </div>
+        </WidgetBox.Header>
+        <Divider.Root />
         <div className="overflow-x-auto pt-4">
           <div className="min-w-[680px]">
-            <div className="grid h-11 grid-cols-[1.5fr_1fr_1fr_96px] items-center gap-5 rounded-lg bg-bg-weak-50 px-4 text-subheading-xs uppercase text-text-soft-400">
+            <div className="grid h-11 grid-cols-[1.5fr_1fr_1fr_96px] items-center gap-5 rounded-lg bg-bg-weak px-4 text-subheading-xs uppercase text-text-soft">
               <span>Category</span>
               <span>Period</span>
               <span className="text-right">Amount</span>
@@ -39,10 +44,8 @@ export function RouteFoundation({ description, icon, title }: RouteFoundationPro
             </div>
           </div>
         </div>
-        <p className="border-t pt-4 text-center text-paragraph-xs text-text-soft-400">
-          {description}
-        </p>
-      </WidgetBox>
+        <p className="border-t pt-4 text-center text-paragraph-xs text-text-soft">{description}</p>
+      </WidgetBox.Root>
     </div>
   );
 }

@@ -97,10 +97,10 @@ describe('Auth Routes Integration', () => {
       expect(fields['email']).toBeDefined();
     });
 
-    it('rejects password shorter than 8 characters with 422 VALIDATION_ERROR', async () => {
+    it('rejects password shorter than 6 characters with 422 VALIDATION_ERROR', async () => {
       const response = await request(app)
         .post('/v1/auth/signup')
-        .send({ email: 'short@test.com', password: 'short' });
+        .send({ email: 'short@test.com', password: '12345' });
 
       expect(response.status).toBe(422);
       const parsed = apiErrorResponseSchema.parse(response.body);

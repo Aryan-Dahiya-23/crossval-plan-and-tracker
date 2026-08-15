@@ -1,21 +1,18 @@
 import { RiFileList3Line } from '@remixicon/react';
 
+import { ActualsTable } from '@/src/components/actuals/actuals-table';
 import { PageHeader } from '@/src/components/layout/page-header';
-import { RouteFoundation } from '@/src/components/states/route-foundation';
 
 export default function ActualsPage() {
   return (
-    <>
+    <div className="p-6 space-y-6">
       <PageHeader
         icon={<RiFileList3Line className="size-6" aria-hidden="true" />}
-        title="Actuals"
-        description="Capture expenses and review activity by month and category."
+        title="Actuals Ledger"
+        description="Capture expenses and review transaction activity by month and category."
       />
-      <RouteFoundation
-        icon={<RiFileList3Line />}
-        title="Actual entries"
-        description="Entry and editing controls are introduced with the financial workflows in Phase 12."
-      />
-    </>
+
+      <ActualsTable />
+    </div>
   );
 }

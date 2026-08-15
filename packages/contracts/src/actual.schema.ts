@@ -121,6 +121,42 @@ export const updateActualRequestSchema = z
 export type UpdateActualRequest = z.input<typeof updateActualRequestSchema>;
 
 /**
+ * Schema for a single row to be imported from CSV.
+ */
+export const importActualRowSchema = z.object({
+  month: monthStringSchema,
+  categoryName: z.string().trim().min(1, 'Category name is required.').max(100),
+  amountMinor: positiveMoneyMinorStringSchema,
+  note: z.string().trim().max(500).optional().nullable(),
+});
+
+export type ImportActualRow = z.infer<typeof importActualRowSchema>;
+
+/**
+ * Request payload schema for batch CSV actuals import: POST /v1/actuals/import
+ */
+export const importActualsRequestSchema = z.object({
+  rows: z
+    .array(importActualRowSchema)
+    .min(1, 'At least one valid row is required.')
+    .max(500, 'Cannot import more than 500 rows at once.'),
+});
+
+export type ImportActualsRequest = z.input<typeof importActualsRequestSchema>;
+
+/**
+ * Response payload schema for batch CSV actuals import.
+ */
+export const importActualsResponseSchema = z.object({
+  data: z.object({
+    importedCount: z.number().int().nonnegative(),
+    actuals: z.array(actualDtoSchema),
+  }),
+});
+
+export type ImportActualsResponse = z.infer<typeof importActualsResponseSchema>;
+
+/**
  * Query parameter schema for listing actuals: GET /v1/actuals
  */
 export const listActualsQuerySchema = z

@@ -6,9 +6,9 @@ import { ApiClientError } from './api-error';
 type ApiMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 type ApiRequestOptions<T> = Omit<RequestInit, 'body' | 'credentials' | 'method'> & {
-  method?: ApiMethod;
+  method?: ApiMethod | undefined;
   body?: unknown;
-  schema?: ZodType<T>;
+  schema?: ZodType<T> | undefined;
 };
 
 const API_BASE_PATH = '/api/v1';
@@ -121,6 +121,14 @@ export const apiClient = {
     init?: Omit<ApiRequestOptions<T>, 'body' | 'method' | 'schema'>,
   ) {
     return apiRequest(path, { ...init, body, method: 'PATCH', schema });
+  },
+  put<T>(
+    path: string,
+    body: unknown,
+    schema?: ZodType<T>,
+    init?: Omit<ApiRequestOptions<T>, 'body' | 'method' | 'schema'>,
+  ) {
+    return apiRequest(path, { ...init, body, method: 'PUT', schema });
   },
   delete(path: string, init?: Omit<ApiRequestOptions<void>, 'method'>) {
     return apiRequest(path, { ...init, method: 'DELETE' });

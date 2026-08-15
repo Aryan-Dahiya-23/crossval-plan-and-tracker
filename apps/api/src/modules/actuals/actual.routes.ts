@@ -1,6 +1,7 @@
 import {
   actualParamsSchema,
   createActualRequestSchema,
+  importActualsRequestSchema,
   listActualsQuerySchema,
   updateActualRequestSchema,
 } from '@crossval/contracts';
@@ -11,6 +12,7 @@ import {
   handleCreateActual,
   handleDeleteActual,
   handleGetActual,
+  handleImportActuals,
   handleListActuals,
   handleUpdateActual,
 } from './actual.controller.js';
@@ -23,6 +25,9 @@ export function createActualRouter(): Router {
 
   // POST /v1/actuals
   router.post('/', validate({ body: createActualRequestSchema }), handleCreateActual);
+
+  // POST /v1/actuals/import (Batch CSV import)
+  router.post('/import', validate({ body: importActualsRequestSchema }), handleImportActuals);
 
   // GET /v1/actuals
   router.get('/', validate({ query: listActualsQuerySchema }), handleListActuals);

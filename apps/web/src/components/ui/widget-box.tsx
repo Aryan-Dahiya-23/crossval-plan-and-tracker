@@ -1,36 +1,48 @@
-import type { HTMLAttributes, ReactNode } from 'react';
+// AlignUI WidgetBox v0.0.0
 
-import { cn } from '@/src/lib/cn';
+import * as React from 'react';
 
-type WidgetBoxProps = HTMLAttributes<HTMLDivElement>;
+import { cnExt } from '../../utils/cn';
+import type { PolymorphicComponentProps } from '../../utils/polymorphic';
 
-export function WidgetBox({ className, ...props }: WidgetBoxProps) {
+function WidgetBox({ className, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <section
-      className={cn(
-        'w-full min-w-0 rounded-20 bg-bg-white-0 p-4 shadow-regular-xs ring-1 ring-inset ring-stroke-soft-200',
+    <div
+      className={cnExt(
+        'w-full min-w-0 rounded-2xl bg-bg-white p-5 shadow-regular-xs ring-1 ring-inset ring-stroke-soft-200',
         className,
       )}
-      {...props}
+      {...rest}
     />
   );
 }
 
-type WidgetHeaderProps = HTMLAttributes<HTMLDivElement> & {
-  icon?: ReactNode;
-};
-
-export function WidgetHeader({ children, className, icon, ...props }: WidgetHeaderProps) {
+function WidgetBoxHeader({ className, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn(
-        'flex h-12 min-w-0 items-center gap-2 pb-4 text-label-sm text-text-strong-950 md:text-label-md',
+      className={cnExt(
+        'flex items-center justify-between gap-3 pb-4 text-label-md font-medium text-text-strong',
         className,
       )}
-      {...props}
-    >
-      {icon && <span className="text-text-sub-600 [&>svg]:size-6">{icon}</span>}
-      <span className="min-w-0 flex-1 truncate">{children}</span>
-    </div>
+      {...rest}
+    />
   );
 }
+
+function WidgetBoxHeaderIcon<T extends React.ElementType>({
+  className,
+  as,
+  ...rest
+}: PolymorphicComponentProps<T, React.HTMLAttributes<HTMLDivElement>>) {
+  const Component = as || 'div';
+  return <Component className={cnExt('size-5 text-text-sub-600 shrink-0', className)} {...rest} />;
+}
+
+export {
+  WidgetBox as Root,
+  WidgetBoxHeader as Header,
+  WidgetBoxHeaderIcon as HeaderIcon,
+  WidgetBox,
+  WidgetBoxHeader,
+};
+export default WidgetBox;

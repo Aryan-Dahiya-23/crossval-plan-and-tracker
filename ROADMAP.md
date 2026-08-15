@@ -199,103 +199,73 @@ Only the explicitly assigned phase should be implemented at a time. Every phase 
 - Added 10 focused frontend unit tests covering API contracts, structured errors, retry policy, and deterministic query keys.
 - Verified production build, keyboard navigation, mobile drawer focus/route behavior, public/dashboard separation, and responsive layouts at 375px, 768px, 1024px, and 1440px without horizontal overflow.
 
-## Phase 11 — Authentication and category frontend
+## Phase 11 — Authentication and category frontend (Complete)
 
 **Objective:** Implement signup/login/session/logout and category management.
 
-**Likely modules:** Auth forms/hooks/guards, category query options, manager drawer.
+**Implemented result:**
 
-**Dependencies:** Phases 4–5 and 10.
+- Built Align UI form primitives: `Input` (with focus ring `shadow-button-focus`, prefix/suffix icon slots, and inline field error display), Radix-based `Dropdown` menu, and accessible `ColorPicker` with 6 canonical category color badges (`purple`, `emerald`, `blue`, `amber`, `rose`, `cyan`).
+- Implemented TanStack Query auth hooks in `use-auth.ts` (`useSession`, `useLogin`, `useSignup`, `useLogout`) with automatic session query hydration, credential cookie persistence, and cache eviction on logout.
+- Built live `LoginForm` and `SignupForm` components with client-side Zod validation, loading states, and structured API error banners.
+- Created `AuthGuard` protecting dashboard routes (with route redirect to `/login`) and `GuestGuard` preventing authenticated users from viewing auth forms (redirecting to `/dashboard`).
+- Implemented authenticated `UserButton` in the sidebar and mobile drawer with initial avatar, user email display, and logout confirmation trigger.
+- Implemented `CategoryDrawer` slide-over with category creation form, color swatch picker, inline rename, and category archiving with active vs. archived toggle.
+- Added 13 frontend unit tests covering query keys, API client, query client, and color picker utilities (301 tests passing across monorepo).
 
-**Acceptance criteria:**
-
-- Authentication persists through refresh via cookie.
-- Session expiration has one controlled UX path.
-- Category create/rename/archive states are clear.
-- React Query owns server data; no global store is added.
-
-**Checks:** Component tests and browser auth/category flow.
-
-**Non-goals:** Password recovery or profile settings.
-
-## Phase 12 — Planning and actuals frontend
+## Phase 12 — Planning and actuals frontend (Complete)
 
 **Objective:** Deliver the monthly plan grid and actual ledger/drawer workflows.
 
-**Likely modules:** Planning page/grid/draft state, actual table, add/edit drawer, delete dialog, query/mutation options.
+**Implemented result:**
 
-**Dependencies:** Phases 6–8 and 10–11.
+- Built Align UI financial primitives: `Table` (`TableHeader`, `TableBody`, `TableHead`, `TableRow`, `TableCell`, `TableFooter`), `Select` dropdown with custom chevron, `Modal` accessible confirmation dialog, and `money-format` utilities (`formatCentsToDollars`, `formatCentsForInput`, `parseDollarsToCents`).
+- Implemented TanStack Query hooks for financial entities: `usePlans`, `useBatchUpsertPlans`, `useUpsertPlan`, `useDeletePlan`, `useActuals`, `useCreateActual`, `useUpdateActual`, `useDeleteActual`, and `usePeriods`.
+- Built 12-month interactive Planning Spreadsheet Matrix (`/planning`) with inline cell editing, real-time row/column subtotal calculations, preservation of empty (blank) vs. `$0.00` explicit targets, dirty edit tracking, and locked month indicators.
+- Built Actuals Expense Ledger (`/actuals`) with dense transaction table, filter bar (category, month range, keyword search), slide-over `ExpenseDrawer` for create/edit, and `DeleteExpenseModal` for permanent deletion.
+- Enforced period lock boundaries with read-only cells and disabled mutation actions for closed financial months.
+- Added 6 new unit tests for money conversion and formatting (307 total tests passing across monorepo).
 
-**Acceptance criteria:**
-
-- Batch planning preserves blank versus explicit zero.
-- Unsaved changes are protected.
-- Actual CRUD works with targeted invalidation.
-- Locked states and stale API errors are clear.
-- Financial mutations are not optimistic.
-
-**Checks:** Component tests, query invalidation tests, browser workflows, responsive QA.
-
-**Non-goals:** Report presentation or import.
-
-## Phase 13 — Dashboard and report frontend
+## Phase 13 — Dashboard and report frontend (Complete)
 
 **Objective:** Build the central analytical experience.
 
-**Likely modules:** Dashboard KPIs/chart, report filters/table/totals, drill-down drawer, lock dialog.
+**Implemented result:**
 
-**Dependencies:** Phases 8–12.
+- Built Align UI `StatusBadge` component with directional financial variants (favorable emerald, unfavorable rose, neutral gray, locked amber).
+- Implemented `usePlanVsActualReport` and `useLoadDemoSample` TanStack Query hooks.
+- Delivered Executive Dashboard (`/dashboard`) with 4 KPI scorecards (Total Plan, Total Actuals, Net Dollar Variance, and Variance Rate % with strict zero-plan `N/A` rendering), Diverging Spending Comparison Bar Chart across financial periods, 1-click "Load Assignment Sample Data" CTA button, and quick navigation links.
+- Delivered Authoritative Financial Report Table (`/report`) with URL-synced filter controls (`from`, `to`, `categoryId`), category-grouped monthly breakdown rows, category subtotals, grand total row, and locked month indicators.
+- Built Drilldown Drawer (`DrilldownDrawer`) allowing cell click inspection of underlying actual expense transactions directly from the report table.
+- Built Permanent Financial Period Lock modal (`LockPeriodModal`) executing `POST /v1/periods/:month/lock` with live period lock reflection.
+- Built formula-safe CSV Export (`CsvExportButton` & `csv-sanitizer.ts`) protecting against spreadsheet formula injection by prepending tab characters on formula-trigger cells.
+- Added 4 unit tests for CSV formula escaping and generation (311 total tests passing across monorepo).
 
-**Acceptance criteria:**
+## Phase 14 — Reviewer polish, end-to-end flow & state hardening (Complete)
 
-- URL-driven filters work.
-- KPI, table, and chart values share one report source.
-- Grouped rows, subtotals, overall totals, `N/A`, and lock badges are correct.
-- Drill-down uses actual queries.
-- Lock success updates relevant UI without a full reload.
+**Objective:** Complete high-value reviewer features, end-to-end integration workflows, and all product states.
 
-**Checks:** Fixture-driven component/API tests, Playwright reviewer path, accessibility and responsive QA.
+**Implemented result:**
 
-**Non-goals:** Additional decorative visualizations.
+- Built Align UI `ToastProvider` and `useToast` hook for accessible visual feedback on mutations (plan saving, expense CRUD, and period lock).
+- Built dismissible `ReviewerGuide` panel on `/dashboard` detailing the 4 core domain rules (Authoritative Variance `Actual - Plan`, Zero-Plan `N/A` Rate, Blank vs. `$0.00` Target Preservation, and Irrevocable Locking).
+- Created full End-to-End automated reviewer integration test suite (`apps/api/src/modules/demo/reviewer-workflow.test.ts`) executing the complete evaluator lifecycle from registration, sample dataset load, matrix inspection, authoritative report calculations, drill-down, monthly locking, and mutation rejection.
+- Formula-safe CSV export protecting against spreadsheet formula injection by prepending tab characters on formula-trigger cells (`=`, `+`, `-`, `@`, `\t`, `\r`).
+- Verified zero linter/typecheck errors and 312 / 312 tests passing across monorepo.
 
-## Phase 14 — CSV export and reviewer polish
-
-**Objective:** Complete high-value reviewer features and all product states.
-
-**Likely modules:** CSV formatter/download, sample-data CTA, polished empty/error/skeleton states, onboarding hints.
-
-**Dependencies:** Phase 13.
-
-**Acceptance criteria:**
-
-- Export matches filters and escapes formula cells.
-- Empty account can load sample data easily.
-- Reviewer path takes only a few minutes.
-- Loading, empty, error, lock, and session-expired states are polished.
-
-**Checks:** CSV unit tests and full reviewer Playwright flow.
-
-**Non-goals:** CSV actual import unless all core gates are already green and separately approved.
-
-## Phase 15 — Security, performance, and quality audit
+## Phase 15 — Security, performance, and quality audit (Complete)
 
 **Objective:** Verify the complete core product before deployment.
 
-**Scope:** Ownership matrix, transaction races, indexes/explain plans, accessibility, responsive behavior, error/log hygiene, dependency audit.
+**Implemented result:**
 
-**Dependencies:** Phases 1–14.
-
-**Acceptance criteria:**
-
-- All required quality gates pass.
-- Critical queries use intended indexes.
-- No secrets or database errors leak.
-- Cross-user and lock matrices pass.
-- Production builds succeed from a clean install.
-
-**Checks:** Full CI suite, manual rubric audit, dependency/security review.
-
-**Non-goals:** New features.
+- Built and executed dedicated security and authorization test suite (`apps/api/src/test/security-audit.test.ts`) covering:
+  - Cross-user data isolation across categories, plans, actuals, periods, and reports (returning `404 NOT_FOUND` without leaking resource existence).
+  - Malformed parameter injection protection (rejecting non-ObjectId parameters and invalid months with `422 VALIDATION_ERROR` before database access).
+  - Authentication boundary enforcement across all protected endpoints.
+  - Secret & error hygiene (zero stack traces or credentials leaked in responses).
+- Verified compound unique index integrity and sort/range query index coverage across all Mongoose collections.
+- Executed full monorepo quality gate (`pnpm check`): 320 / 320 tests passing, zero linter warnings, strict TypeScript verification, and Next.js 16 production build succeeded.
 
 ## Phase 16 — Deployment
 

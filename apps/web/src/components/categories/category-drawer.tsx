@@ -23,7 +23,7 @@ import { ColorPicker, getCategoryColorStyle } from '../ui/color-picker';
 import * as CompactButton from '../ui/compact-button';
 import * as Drawer from '../ui/drawer';
 import * as Input from '../ui/input';
-import { Skeleton } from '../ui/skeleton';
+import { InlineLoadingState } from '../ui/loading-state';
 
 type CategoryDrawerProps = {
   open: boolean;
@@ -196,10 +196,8 @@ export function CategoryDrawer({ onOpenChange, open }: CategoryDrawerProps) {
             </div>
 
             {isLoading ? (
-              <div className="space-y-2">
-                <Skeleton className="h-12 w-full rounded-xl" />
-                <Skeleton className="h-12 w-full rounded-xl" />
-                <Skeleton className="h-12 w-full rounded-xl" />
+              <div className="flex items-center justify-center p-8 rounded-xl bg-bg-weak-50">
+                <InlineLoadingState message="Loading categories..." />
               </div>
             ) : categories.length === 0 ? (
               <div className="rounded-xl border border-dashed border-stroke-soft-200 p-6 text-center text-paragraph-sm text-text-sub-600">

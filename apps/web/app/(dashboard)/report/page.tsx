@@ -7,7 +7,7 @@ import { PageHeader } from '@/src/components/layout/page-header';
 import { LockPeriodModal } from '@/src/components/report/lock-period-modal';
 import { ReportFilters } from '@/src/components/report/report-filters';
 import { ReportTable } from '@/src/components/report/report-table';
-import { Skeleton } from '@/src/components/ui/skeleton';
+import { PageLoadingState } from '@/src/components/ui/loading-state';
 import { WidgetBox } from '@/src/components/ui/widget-box';
 import { usePlanVsActualReport } from '@/src/hooks/use-reports';
 
@@ -43,10 +43,10 @@ export default function ReportPage() {
       />
 
       {isLoading ? (
-        <div className="space-y-4">
-          <Skeleton className="h-12 w-full rounded-12" />
-          <Skeleton className="h-64 w-full rounded-16" />
-        </div>
+        <PageLoadingState
+          message="Generating Financial Report"
+          subMessage="Aggregating category subtotals and period targets..."
+        />
       ) : report ? (
         <ReportTable report={report} />
       ) : (

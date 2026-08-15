@@ -11,7 +11,7 @@ import { formatCentsToDollars } from '../../lib/money-format';
 import { cn } from '../../utils/cn';
 import { getCategoryColorStyle } from '../ui/color-picker';
 import * as CompactButton from '../ui/compact-button';
-import { Skeleton } from '../ui/skeleton';
+import { TableLoadingState } from '../ui/loading-state';
 import * as Table from '../ui/table';
 import { ActualsFilters } from './actuals-filters';
 import { CsvImportModal } from './csv-import-modal';
@@ -36,14 +36,11 @@ export function ActualsTable() {
   } | null>(null);
 
   const { data: categories = [] } = useCategories({ includeArchived: true });
+  const { data: periods = [] } = usePeriods({ from: fromMonth, to: toMonth });
   const { data: actualsData, isLoading: isLoadingActuals } = useActuals({
     from: fromMonth,
     to: toMonth,
     categoryId: categoryId || undefined,
-  });
-  const { data: periods = [] } = usePeriods({
-    from: fromMonth,
-    to: toMonth,
   });
 
   const categoryMap = useMemo(() => {
@@ -51,20 +48,21 @@ export function ActualsTable() {
   }, [categories]);
 
   const lockedMonths = useMemo(() => {
-    const set = new Set<string>();
-    for (const p of periods) {
-      if (p.status === 'LOCKED') set.add(p.month);
-    }
-    return set;
+    return new Set(periods.filter((p) => p.status === 'LOCKED').map((p) => p.month));
   }, [periods]);
 
-  // Filter client-side by search query
+  // Filter client-side by search term (notes or category name)
   const filteredActuals = useMemo(() => {
     const list = actualsData?.data ?? [];
     if (!search.trim()) return list;
-    const q = search.toLowerCase().trim();
-    return list.filter((item) => (item.note ?? '').toLowerCase().includes(q));
-  }, [actualsData?.data, search]);
+    const q = search.toLowerCase();
+    return list.filter((item) => {
+      const cat = categoryMap.get(item.categoryId);
+      const catMatch = cat?.name.toLowerCase().includes(q);
+      const noteMatch = (item.note ?? '').toLowerCase().includes(q);
+      return catMatch || noteMatch;
+    });
+  }, [actualsData?.data, search, categoryMap]);
 
   const totalExpenseMinor = useMemo(() => {
     let sum = 0n;
@@ -126,25 +124,7 @@ export function ActualsTable() {
 
           <Table.Body spacing={0}>
             {isLoadingActuals ? (
-              Array.from({ length: 4 }).map((_, i) => (
-                <Table.Row key={i}>
-                  <Table.Cell>
-                    <Skeleton className="h-4 w-20" />
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Skeleton className="h-5 w-28 rounded-full" />
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Skeleton className="h-4 w-48" />
-                  </Table.Cell>
-                  <Table.Cell className="text-right">
-                    <Skeleton className="ml-auto h-4 w-20" />
-                  </Table.Cell>
-                  <Table.Cell className="text-right">
-                    <Skeleton className="ml-auto size-7 rounded-md" />
-                  </Table.Cell>
-                </Table.Row>
-              ))
+              <TableLoadingState message="Loading expense transactions..." colSpan={5} />
             ) : filteredActuals.length === 0 ? (
               <Table.Row>
                 <Table.Cell colSpan={5} className="h-48 text-center text-text-sub-600">

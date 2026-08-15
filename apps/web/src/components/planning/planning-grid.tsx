@@ -10,7 +10,7 @@ import { useBatchUpsertPlans, usePlans } from '../../hooks/use-plans';
 import { formatCentsToDollars, parseDollarsToCents } from '../../lib/money-format';
 import { cn } from '../../utils/cn';
 import { getCategoryColorStyle } from '../ui/color-picker';
-import { Skeleton } from '../ui/skeleton';
+import { PageLoadingState } from '../ui/loading-state';
 import * as Table from '../ui/table';
 import { useToast } from '../ui/toast';
 import { PlanningHeader } from './planning-header';
@@ -210,9 +210,11 @@ export function PlanningGrid() {
 
   if (isLoading) {
     return (
-      <div className="space-y-4 p-6">
-        <Skeleton className="h-10 w-64 rounded-10" />
-        <Skeleton className="h-96 w-full rounded-2xl" />
+      <div className="p-6">
+        <PageLoadingState
+          message="Loading Planning Matrix"
+          subMessage="Preparing 12-month budget targets and categories..."
+        />
       </div>
     );
   }

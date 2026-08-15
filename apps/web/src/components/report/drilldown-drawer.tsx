@@ -7,7 +7,7 @@ import { useActuals } from '../../hooks/use-actuals';
 import { formatCentsToDollars } from '../../lib/money-format';
 import { getCategoryColorStyle } from '../ui/color-picker';
 import * as Drawer from '../ui/drawer';
-import { Skeleton } from '../ui/skeleton';
+import { TableLoadingState } from '../ui/loading-state';
 import * as Table from '../ui/table';
 
 export type DrilldownTarget = {
@@ -117,19 +117,7 @@ function DrilldownContent({ target }: { target: DrilldownTarget }) {
 
             <Table.Body spacing={0}>
               {isLoading ? (
-                Array.from({ length: 3 }).map((_, i) => (
-                  <Table.Row key={i}>
-                    <Table.Cell>
-                      <Skeleton className="h-4 w-16" />
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Skeleton className="h-4 w-32" />
-                    </Table.Cell>
-                    <Table.Cell className="text-right">
-                      <Skeleton className="ml-auto h-4 w-16" />
-                    </Table.Cell>
-                  </Table.Row>
-                ))
+                <TableLoadingState message="Loading transactions..." colSpan={3} />
               ) : transactions.length === 0 ? (
                 <Table.Row>
                   <Table.Cell colSpan={3} className="h-28 text-center text-text-sub-600">

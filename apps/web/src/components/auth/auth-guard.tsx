@@ -5,7 +5,7 @@ import { useEffect, type ReactNode } from 'react';
 
 import { useSession } from '@/src/hooks/use-auth';
 
-import { Skeleton } from '../ui/skeleton';
+import { LoadingSpinner } from '../ui/loading-state';
 
 export function AuthGuard({ children }: { children: ReactNode }) {
   const { data: user, isLoading } = useSession();
@@ -19,14 +19,15 @@ export function AuthGuard({ children }: { children: ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center p-6 space-y-4">
-        <Skeleton className="h-10 w-48 rounded-10" />
-        <Skeleton className="h-4 w-72" />
-        <div className="grid w-full max-w-4xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 pt-6">
-          <Skeleton className="h-36 rounded-20" />
-          <Skeleton className="h-36 rounded-20" />
-          <Skeleton className="h-36 rounded-20" />
-          <Skeleton className="h-36 rounded-20" />
+      <div className="flex min-h-screen flex-col items-center justify-center bg-bg-white p-6">
+        <div className="flex flex-col items-center justify-center gap-4">
+          <div className="flex size-14 items-center justify-center rounded-2xl bg-primary-lighter/60 text-primary-base ring-1 ring-inset ring-primary-base/20">
+            <LoadingSpinner size="large" />
+          </div>
+          <div className="text-center">
+            <p className="text-label-md font-semibold text-text-strong">Verifying Session</p>
+            <p className="text-paragraph-xs text-text-sub-600">Connecting to secure workspace...</p>
+          </div>
         </div>
       </div>
     );

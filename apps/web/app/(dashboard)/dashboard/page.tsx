@@ -14,7 +14,7 @@ import { ReviewerGuide } from '@/src/components/dashboard/reviewer-guide';
 import { SampleDataCTA } from '@/src/components/dashboard/sample-data-cta';
 import { SpendingChart } from '@/src/components/dashboard/spending-chart';
 import { PageHeader } from '@/src/components/layout/page-header';
-import { Skeleton } from '@/src/components/ui/skeleton';
+import { PageLoadingState } from '@/src/components/ui/loading-state';
 import { WidgetBox } from '@/src/components/ui/widget-box';
 import { usePrefetchRoute } from '@/src/hooks/use-prefetch';
 import { usePlanVsActualReport } from '@/src/hooks/use-reports';
@@ -41,15 +41,10 @@ export default function DashboardPage() {
       <ReviewerGuide />
 
       {isLoading ? (
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Skeleton className="h-28 rounded-16" />
-            <Skeleton className="h-28 rounded-16" />
-            <Skeleton className="h-28 rounded-16" />
-            <Skeleton className="h-28 rounded-16" />
-          </div>
-          <Skeleton className="h-80 rounded-16" />
-        </div>
+        <PageLoadingState
+          message="Loading Financial Overview"
+          subMessage="Fetching latest budget plans, actual transactions, and net variances..."
+        />
       ) : report ? (
         <div className="space-y-6">
           {/* Sample Data CTA for Clean Accounts */}

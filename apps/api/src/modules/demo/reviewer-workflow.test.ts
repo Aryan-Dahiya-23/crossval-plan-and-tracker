@@ -52,7 +52,7 @@ describe('Reviewer End-to-End Workflow Verification', () => {
     expect(demoRes.status).toBe(201);
     const demoData = loadDemoSampleResponseSchema.parse(demoRes.body);
     expect(demoData.data.plansCreated).toBe(4);
-    expect(demoData.data.actualsCreated).toBe(5);
+    expect(demoData.data.actualsCreated).toBe(10);
 
     // Retrieve categories created by demo dataset
     const catRes = await request(app).get('/v1/categories').set('Cookie', userCookie);
@@ -81,18 +81,18 @@ describe('Reviewer End-to-End Workflow Verification', () => {
     );
     expect(payrollJanPlan?.amountMinor).toBe('2000000'); // $20,000.00
 
-    // 3. Actuals Domain: Verify 5 actual expense transactions recorded
+    // 3. Actuals Domain: Verify 10 actual expense transactions recorded
     const actualsRes = await request(app)
       .get('/v1/actuals?from=2026-01&to=2026-02')
       .set('Cookie', userCookie);
     expect(actualsRes.status).toBe(200);
     const actualsData = actualsResponseSchema.parse(actualsRes.body);
-    expect(actualsData.data).toHaveLength(5);
+    expect(actualsData.data).toHaveLength(10);
 
     const mktJanActuals = actualsData.data.filter(
       (a) => a.month === '2026-01' && a.categoryId === mktCategory!.id,
     );
-    expect(mktJanActuals).toHaveLength(3); // Google Ads ($2k), LinkedIn ($1k), Agency ($1.8k) -> $4,800.00
+    expect(mktJanActuals).toHaveLength(4); // Google Ads ($2k), LinkedIn ($1k), Agency ($1.2k), Design ($600) -> $4,800.00
 
     // 4. Report Domain: Authoritative calculations & Zero-Plan N/A variance rate rule
     const reportRes = await request(app)

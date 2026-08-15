@@ -51,7 +51,7 @@ describe('demo.service', () => {
 
     expect(res).toEqual({
       plansCreated: 4,
-      actualsCreated: 5,
+      actualsCreated: 10,
       range: {
         from: '2026-01',
         to: '2026-02',
@@ -62,7 +62,7 @@ describe('demo.service', () => {
     expect(plans).toHaveLength(4);
 
     const actuals = await ActualModel.find({ userId });
-    expect(actuals).toHaveLength(5);
+    expect(actuals).toHaveLength(10);
   });
 
   it('rejects sample data loading if account already has plans', async () => {

@@ -59,7 +59,7 @@ describe('Demo Routes: POST /v1/demo/assignment-sample', () => {
     expect(res.status).toBe(201);
     const parsed = loadDemoSampleResponseSchema.parse(res.body);
     expect(parsed.data.plansCreated).toBe(4);
-    expect(parsed.data.actualsCreated).toBe(5);
+    expect(parsed.data.actualsCreated).toBe(10);
     expect(parsed.data.range).toEqual({ from: '2026-01', to: '2026-02' });
 
     // Verify report endpoint immediately reflects sample data

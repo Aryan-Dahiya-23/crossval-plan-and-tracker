@@ -9,7 +9,7 @@ import { FinancialPeriodModel } from '../periods/financial-period.model.js';
 import { PlanModel } from '../plans/plan.model.js';
 
 /**
- * Loads the canonical assignment sample dataset for a user account.
+ * Loads the canonical assignment sample dataset for a user account with granular line-item entries.
  *
  * Guard:
  * The account must have 0 plans, 0 actual entries, and 0 locked financial periods.
@@ -21,12 +21,22 @@ import { PlanModel } from '../plans/plan.model.js';
  *   - Payroll 2026-01: $20,000.00 (2000000n)
  *   - Marketing 2026-02: $5,000.00 (500000n)
  *   - Payroll 2026-02: $20,000.00 (2000000n)
- * - 5 Actual Entries:
- *   - Marketing 2026-01: Google Ads $2,000.00 (200000n)
- *   - Marketing 2026-01: LinkedIn $1,000.00 (100000n)
- *   - Marketing 2026-01: Agency $1,800.00 (180000n)
- *   - Payroll 2026-01: Salaries $20,500.00 (2050000n)
- *   - Payroll 2026-02: Salaries $19,800.00 (1980000n)
+ * - 10 Granular Actual Entries:
+ *   - Marketing 2026-01 ($4,800.00 total):
+ *       - Google Search & Display Ads $2,000.00 (200000n)
+ *       - LinkedIn Sponsored Campaigns $1,000.00 (100000n)
+ *       - Creative Agency Retainer $1,200.00 (120000n)
+ *       - Brand Design Contractor $600.00 (60000n)
+ *   - Payroll 2026-01 ($20,500.00 total):
+ *       - Engineering Team Base Salaries $14,000.00 (1400000n)
+ *       - Product & Design Salaries $4,500.00 (450000n)
+ *       - Healthcare & Dental Benefits $2,000.00 (200000n)
+ *   - Marketing 2026-02 ($0.00 total):
+ *       - [Intentionally omitted to prove missing actual zero-fill rule]
+ *   - Payroll 2026-02 ($19,800.00 total):
+ *       - Engineering Team Base Salaries $14,000.00 (1400000n)
+ *       - Product & Design Salaries $4,500.00 (450000n)
+ *       - External Contractor Invoices $1,300.00 (130000n)
  */
 export async function loadAssignmentSample(userId: Types.ObjectId): Promise<LoadDemoSampleDataDto> {
   // Check clean account invariant
@@ -122,43 +132,83 @@ export async function loadAssignmentSample(userId: Types.ObjectId): Promise<Load
       { session, ordered: true },
     );
 
-    // Create 5 actuals
+    // Create 10 granular actual entries matching exact PDF totals
     await ActualModel.create(
       [
+        // Marketing 2026-01 ($4,800.00 total)
         {
           userId,
           categoryId: marketing._id,
           monthKey: 202601,
           amountMinor: 200_000n,
-          note: 'Google Ads',
+          note: 'Google Search & Display Ads',
         },
         {
           userId,
           categoryId: marketing._id,
           monthKey: 202601,
           amountMinor: 100_000n,
-          note: 'LinkedIn',
+          note: 'LinkedIn Sponsored Campaigns',
         },
         {
           userId,
           categoryId: marketing._id,
           monthKey: 202601,
-          amountMinor: 180_000n,
-          note: 'Agency',
+          amountMinor: 120_000n,
+          note: 'Creative Agency Retainer',
+        },
+        {
+          userId,
+          categoryId: marketing._id,
+          monthKey: 202601,
+          amountMinor: 60_000n,
+          note: 'Brand Design Contractor',
+        },
+
+        // Payroll 2026-01 ($20,500.00 total)
+        {
+          userId,
+          categoryId: payroll._id,
+          monthKey: 202601,
+          amountMinor: 1_400_000n,
+          note: 'Engineering Team Base Salaries',
         },
         {
           userId,
           categoryId: payroll._id,
           monthKey: 202601,
-          amountMinor: 2_050_000n,
-          note: 'Salaries',
+          amountMinor: 450_000n,
+          note: 'Product & Design Salaries',
+        },
+        {
+          userId,
+          categoryId: payroll._id,
+          monthKey: 202601,
+          amountMinor: 200_000n,
+          note: 'Healthcare & Dental Benefits',
+        },
+
+        // Payroll 2026-02 ($19,800.00 total)
+        {
+          userId,
+          categoryId: payroll._id,
+          monthKey: 202602,
+          amountMinor: 1_400_000n,
+          note: 'Engineering Team Base Salaries',
         },
         {
           userId,
           categoryId: payroll._id,
           monthKey: 202602,
-          amountMinor: 1_980_000n,
-          note: 'Salaries',
+          amountMinor: 450_000n,
+          note: 'Product & Design Salaries',
+        },
+        {
+          userId,
+          categoryId: payroll._id,
+          monthKey: 202602,
+          amountMinor: 130_000n,
+          note: 'External Contractor Invoices',
         },
       ],
       { session, ordered: true },
@@ -166,7 +216,7 @@ export async function loadAssignmentSample(userId: Types.ObjectId): Promise<Load
 
     return {
       plansCreated: 4,
-      actualsCreated: 5,
+      actualsCreated: 10,
       range: {
         from: '2026-01' as unknown as MonthString,
         to: '2026-02' as unknown as MonthString,

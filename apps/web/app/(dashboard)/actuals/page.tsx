@@ -1,7 +1,13 @@
+import type { Metadata } from 'next';
 import { RiFileList3Line } from '@remixicon/react';
 
 import { ActualsTable } from '@/src/components/actuals/actuals-table';
 import { PageHeader } from '@/src/components/layout/page-header';
+
+export const metadata: Metadata = {
+  title: 'Actuals Ledger',
+  description: 'Capture expenses and review transaction activity by month and category.',
+};
 
 export default function ActualsPage() {
   return (

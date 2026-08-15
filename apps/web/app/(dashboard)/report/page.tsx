@@ -1,65 +1,13 @@
-'use client';
+import type { Metadata } from 'next';
 
-import { RiBarChartBoxLine } from '@remixicon/react';
-import { useState } from 'react';
+import { ReportView } from '@/src/components/report/report-view';
 
-import { PageHeader } from '@/src/components/layout/page-header';
-import { LockPeriodModal } from '@/src/components/report/lock-period-modal';
-import { ReportFilters } from '@/src/components/report/report-filters';
-import { ReportTable } from '@/src/components/report/report-table';
-import { PageLoadingState } from '@/src/components/ui/loading-state';
-import { WidgetBox } from '@/src/components/ui/widget-box';
-import { usePlanVsActualReport } from '@/src/hooks/use-reports';
+export const metadata: Metadata = {
+  title: 'Plan vs Actual Report',
+  description:
+    'Authoritative financial comparison, category subtotals, variance calculations, and transaction drill-down.',
+};
 
 export default function ReportPage() {
-  const [fromMonth, setFromMonth] = useState('2026-01');
-  const [toMonth, setToMonth] = useState('2026-12');
-  const [categoryId, setCategoryId] = useState('');
-  const [lockModalOpen, setLockModalOpen] = useState(false);
-
-  const { data: report, isLoading } = usePlanVsActualReport({
-    from: fromMonth,
-    to: toMonth,
-    categoryId: categoryId || undefined,
-  });
-
-  return (
-    <div className="space-y-6">
-      <PageHeader
-        icon={<RiBarChartBoxLine className="size-5" aria-hidden="true" />}
-        title="Plan vs Actual Report"
-        description="Authoritative financial comparison, category subtotals, variance calculations, and transaction drill-down."
-      />
-
-      <ReportFilters
-        fromMonth={fromMonth}
-        toMonth={toMonth}
-        categoryId={categoryId}
-        onFromChange={setFromMonth}
-        onToChange={setToMonth}
-        onCategoryChange={setCategoryId}
-        onOpenLockModal={() => setLockModalOpen(true)}
-        report={report}
-      />
-
-      {isLoading ? (
-        <PageLoadingState
-          message="Generating Financial Report"
-          subMessage="Aggregating category subtotals and period targets..."
-        />
-      ) : report ? (
-        <ReportTable report={report} />
-      ) : (
-        <WidgetBox className="p-8 text-center text-text-sub-600">
-          Unable to generate plan vs actual financial report.
-        </WidgetBox>
-      )}
-
-      <LockPeriodModal
-        open={lockModalOpen}
-        onOpenChange={setLockModalOpen}
-        defaultMonth={fromMonth}
-      />
-    </div>
-  );
+  return <ReportView />;
 }

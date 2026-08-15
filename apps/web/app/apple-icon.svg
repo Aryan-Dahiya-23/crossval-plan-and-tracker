@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" width="180" height="180">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </linearGradient>
+    <linearGradient id="barBlue" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#60A5FA" />
+      <stop offset="100%" stop-color="#2563EB" />
+    </linearGradient>
+    <linearGradient id="barTeal" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#34D399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+  </defs>
+  <!-- Background with rounded corners -->
+  <rect width="180" height="180" rx="40" fill="url(#bgGrad)" />
+  <rect x="2" y="2" width="176" height="176" rx="38" fill="none" stroke="#334155" stroke-width="4" />
+  
+  <!-- Financial Bars -->
+  <!-- Bar 1 (Plan) -->
+  <rect x="34" y="80" width="24" height="60" rx="8" fill="url(#barBlue)" />
+  <!-- Bar 2 (Actual - Favorable) -->
+  <rect x="68" y="52" width="24" height="88" rx="8" fill="url(#barTeal)" />
+  <!-- Bar 3 (Plan Target 2) -->
+  <rect x="102" y="90" width="24" height="50" rx="8" fill="url(#barBlue)" />
+  <!-- Bar 4 (Actual 2) -->
+  <rect x="136" y="64" width="24" height="76" rx="8" fill="url(#barTeal)" />
+</svg>

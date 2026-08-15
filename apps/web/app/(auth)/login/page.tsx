@@ -1,6 +1,12 @@
+import type { Metadata } from 'next';
 import { RiUserLine } from '@remixicon/react';
 
 import { LoginForm } from '@/src/components/auth/login-form';
+
+export const metadata: Metadata = {
+  title: 'Log In',
+  description: 'Enter your credentials to access your CrossVal financial workspace.',
+};
 
 export default function LoginPage() {
   return (

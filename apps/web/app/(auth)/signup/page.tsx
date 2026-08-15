@@ -1,6 +1,13 @@
+import type { Metadata } from 'next';
 import { RiUserAddLine } from '@remixicon/react';
 
 import { SignupForm } from '@/src/components/auth/signup-form';
+
+export const metadata: Metadata = {
+  title: 'Sign Up',
+  description:
+    'Create a CrossVal financial workspace to begin budget planning and expense tracking.',
+};
 
 export default function SignupPage() {
   return (

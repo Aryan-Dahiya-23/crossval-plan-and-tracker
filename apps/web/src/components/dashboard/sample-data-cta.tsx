@@ -1,106 +1,73 @@
 'use client';
 
-import {
-  RiCheckLine,
-  RiDatabase2Line,
-  RiErrorWarningLine,
-  RiFlashlightLine,
-} from '@remixicon/react';
-import { useState } from 'react';
+import * as React from 'react';
+import { RiDatabase2Line, RiFlashlightLine } from '@remixicon/react';
 
-import { useLoadDemoSample } from '@/src/hooks/use-demo';
-import { ApiClientError } from '@/src/lib/api-client';
-
-import { Button } from '../ui/button';
-import { WidgetBox } from '../ui/widget-box';
+import { useLoadDemoSample } from '../../hooks/use-demo';
+import { ApiClientError } from '../../lib/api-client';
+import * as Button from '../ui/button';
+import { useToast } from '../ui/toast';
+import * as WidgetBox from '../ui/widget-box';
 
 export function SampleDataCTA({ hasData }: { hasData: boolean }) {
-  const [successResult, setSuccessResult] = useState<{
-    plansCreated: number;
-    actualsCreated: number;
-  } | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
   const demoMutation = useLoadDemoSample();
+  const toast = useToast();
 
   const handleLoadSample = () => {
-    setErrorMessage(null);
-    setSuccessResult(null);
-
     demoMutation.mutate(undefined, {
       onSuccess: (data) => {
-        setSuccessResult({
-          plansCreated: data.plansCreated,
-          actualsCreated: data.actualsCreated,
-        });
+        toast.success(
+          `Successfully loaded ${data.plansCreated} budget plans and ${data.actualsCreated} actual expense entries!`,
+        );
       },
       onError: (err) => {
         if (err instanceof ApiClientError) {
-          setErrorMessage(err.message);
+          toast.error(err.message);
         } else {
-          setErrorMessage('Unable to load sample data. Account must have no existing records.');
+          toast.error('Unable to load sample data. Account must have no existing records.');
         }
       },
     });
   };
 
-  if (hasData && !successResult) {
+  // Automatically hide the card as soon as the account contains data
+  if (hasData) {
     return null;
   }
 
   return (
-    <WidgetBox className="relative overflow-hidden p-6 border-dashed border-2 border-primary-base/30 bg-primary-lighter/10">
+    <WidgetBox.Root className="relative overflow-hidden p-6 border-dashed border-2 border-primary-base/30 bg-primary-lighter/10">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-4">
-          <span className="grid size-12 shrink-0 place-items-center rounded-12 bg-primary-lighter text-primary-base">
+          <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-primary-lighter text-primary-base">
             <RiFlashlightLine className="size-6" />
           </span>
           <div className="space-y-1">
-            <h3 className="text-title-h6 font-semibold text-text-strong-950">
+            <h3 className="text-title-h6 font-semibold text-text-strong">
               Demo Assignment Dataset
             </h3>
             <p className="text-paragraph-sm text-text-sub-600 max-w-xl">
-              Populate the 4 budget plans and 5 actual expense entries from the assignment
+              Populate the 4 budget plans and 10 granular actual expense entries from the assignment
               specification to instantly test calculations, charts, and drill-down reports.
             </p>
-
-            {successResult && (
-              <div className="flex items-center gap-2 pt-2 text-paragraph-xs font-medium text-success-dark">
-                <RiCheckLine className="size-4 text-success-base" />
-                <span>
-                  Successfully loaded {successResult.plansCreated} plans and{' '}
-                  {successResult.actualsCreated} actuals!
-                </span>
-              </div>
-            )}
-
-            {errorMessage && (
-              <div className="flex items-center gap-2 pt-2 text-paragraph-xs font-medium text-error-dark">
-                <RiErrorWarningLine className="size-4 text-error-base" />
-                <span>{errorMessage}</span>
-              </div>
-            )}
           </div>
         </div>
 
         <div className="shrink-0">
-          <Button
-            size="medium"
-            onClick={handleLoadSample}
-            disabled={demoMutation.isPending || Boolean(successResult)}
-          >
+          <Button.Root size="medium" onClick={handleLoadSample} disabled={demoMutation.isPending}>
             {demoMutation.isPending ? (
-              'Loading sample...'
-            ) : successResult ? (
-              'Sample Loaded'
+              <span>Loading sample...</span>
             ) : (
               <>
-                <RiDatabase2Line className="size-4" /> Load Sample Data
+                <Button.Icon as={RiDatabase2Line} />
+                <span>Load Sample Data</span>
               </>
             )}
-          </Button>
+          </Button.Root>
         </div>
       </div>
-    </WidgetBox>
+    </WidgetBox.Root>
   );
 }
+
+export default SampleDataCTA;

@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState, type ReactNode } from 'react';
 
+import { usePrefetchRoute } from '../../hooks/use-prefetch';
 import { cn } from '../../utils/cn';
 import { CategoryDrawer } from '../categories/category-drawer';
 import * as CompactButton from '../ui/compact-button';
@@ -30,6 +31,7 @@ function NavigationLinks({
   onOpenCategories?: () => void;
 }) {
   const pathname = usePathname();
+  const { prefetchCategories, prefetchRoute } = usePrefetchRoute();
 
   return (
     <nav aria-label="Primary navigation" className="space-y-1">
@@ -39,6 +41,9 @@ function NavigationLinks({
           <Link
             href={href}
             aria-current={active ? 'page' : undefined}
+            onMouseEnter={() => prefetchRoute(href)}
+            onFocus={() => prefetchRoute(href)}
+            onTouchStart={() => prefetchRoute(href)}
             {...(collapsed ? { 'aria-label': label } : {})}
             {...(onNavigate ? { onClick: onNavigate } : {})}
             className={cn(
@@ -90,6 +95,8 @@ function NavigationLinks({
                   type="button"
                   aria-label="Manage Categories"
                   onClick={onOpenCategories}
+                  onMouseEnter={prefetchCategories}
+                  onFocus={prefetchCategories}
                   className="group relative flex h-10 w-10 items-center justify-center rounded-lg text-label-sm text-text-sub-600 transition duration-200 ease-out hover:bg-bg-weak-50 hover:text-text-strong focus-visible:shadow-button-important-focus focus-visible:outline-none cursor-pointer"
                 >
                   <RiPriceTag3Line className="size-5 shrink-0" aria-hidden="true" />
@@ -101,6 +108,8 @@ function NavigationLinks({
             <button
               type="button"
               onClick={onOpenCategories}
+              onMouseEnter={prefetchCategories}
+              onFocus={prefetchCategories}
               className="group relative flex h-10 w-full items-center gap-3 rounded-lg px-3 text-label-sm text-text-sub-600 transition duration-200 ease-out hover:bg-bg-weak-50 hover:text-text-strong focus-visible:shadow-button-important-focus focus-visible:outline-none cursor-pointer"
             >
               <RiPriceTag3Line className="size-5 shrink-0" aria-hidden="true" />

@@ -16,9 +16,11 @@ import { SpendingChart } from '@/src/components/dashboard/spending-chart';
 import { PageHeader } from '@/src/components/layout/page-header';
 import { Skeleton } from '@/src/components/ui/skeleton';
 import { WidgetBox } from '@/src/components/ui/widget-box';
+import { usePrefetchRoute } from '@/src/hooks/use-prefetch';
 import { usePlanVsActualReport } from '@/src/hooks/use-reports';
 
 export default function DashboardPage() {
+  const { prefetchRoute } = usePrefetchRoute();
   const { data: report, isLoading } = usePlanVsActualReport({
     from: '2026-01',
     to: '2026-12',
@@ -69,6 +71,9 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <Link
               href="/planning"
+              onMouseEnter={() => prefetchRoute('/planning')}
+              onFocus={() => prefetchRoute('/planning')}
+              onTouchStart={() => prefetchRoute('/planning')}
               className="group block rounded-16 bg-bg-white-0 p-5 ring-1 ring-inset ring-stroke-soft-200 transition hover:bg-bg-weak-50/50 hover:ring-stroke-sub-300"
             >
               <div className="flex items-center justify-between">
@@ -87,6 +92,9 @@ export default function DashboardPage() {
 
             <Link
               href="/actuals"
+              onMouseEnter={() => prefetchRoute('/actuals')}
+              onFocus={() => prefetchRoute('/actuals')}
+              onTouchStart={() => prefetchRoute('/actuals')}
               className="group block rounded-16 bg-bg-white-0 p-5 ring-1 ring-inset ring-stroke-soft-200 transition hover:bg-bg-weak-50/50 hover:ring-stroke-sub-300"
             >
               <div className="flex items-center justify-between">
@@ -105,6 +113,9 @@ export default function DashboardPage() {
 
             <Link
               href="/report"
+              onMouseEnter={() => prefetchRoute('/report')}
+              onFocus={() => prefetchRoute('/report')}
+              onTouchStart={() => prefetchRoute('/report')}
               className="group block rounded-16 bg-bg-white-0 p-5 ring-1 ring-inset ring-stroke-soft-200 transition hover:bg-bg-weak-50/50 hover:ring-stroke-sub-300"
             >
               <div className="flex items-center justify-between">

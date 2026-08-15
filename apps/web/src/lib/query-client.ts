@@ -16,8 +16,10 @@ export function createQueryClient() {
     defaultOptions: {
       queries: {
         retry: shouldRetryQuery,
-        staleTime: 30_000,
+        staleTime: 60_000, // Keep data fresh for 60 seconds
+        gcTime: 10 * 60 * 1000, // Keep cached data in memory for 10 minutes
         refetchOnWindowFocus: false,
+        refetchOnMount: false, // Use cached data instantly without background skeleton flashes
       },
       mutations: {
         retry: false,

@@ -32,3 +32,16 @@ describe('shouldRetryQuery', () => {
     expect(shouldRetryQuery(1, error)).toBe(false);
   });
 });
+
+describe('createQueryClient', () => {
+  it('configures optimal staleTime, gcTime, and caching defaults', async () => {
+    const { createQueryClient } = await import('./query-client');
+    const client = createQueryClient();
+
+    const queryDefaults = client.getDefaultOptions().queries;
+    expect(queryDefaults?.staleTime).toBe(60_000);
+    expect(queryDefaults?.gcTime).toBe(600_000);
+    expect(queryDefaults?.refetchOnMount).toBe(false);
+    expect(queryDefaults?.refetchOnWindowFocus).toBe(false);
+  });
+});

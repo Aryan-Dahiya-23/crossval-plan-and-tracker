@@ -233,33 +233,33 @@ export function PlanningGrid() {
         isSaving={batchUpsertMutation.isPending}
       />
 
-      <div className="overflow-hidden rounded-2xl bg-bg-white shadow-regular-xs ring-1 ring-inset ring-stroke-soft-200">
-        <Table.Root className="min-w-[1100px]">
+      <div className="overflow-hidden rounded-2xl bg-bg-white shadow-regular-xs border border-stroke-soft-200">
+        <Table.Root className="min-w-[960px]">
           <Table.Header>
             <Table.Row>
-              <Table.Head className="w-48 sticky left-0 z-20 bg-bg-weak-50">Category</Table.Head>
+              <Table.Head className="w-44 sticky left-0 z-20 bg-bg-weak-50">Category</Table.Head>
               {months.map(({ key: month, label }) => {
                 const isLocked = lockedMonths.has(month);
                 return (
-                  <Table.Head key={month} className="text-right w-24">
+                  <Table.Head key={month} className="text-right w-20 px-2">
                     <div className="flex items-center justify-end gap-1">
                       <span>{label}</span>
                       {isLocked && (
                         <span title="Period locked">
-                          <RiLockLine className="size-3.5 text-warning-base" />
+                          <RiLockLine className="size-3 text-warning-base" />
                         </span>
                       )}
                     </div>
                   </Table.Head>
                 );
               })}
-              <Table.Head className="text-right w-28 bg-bg-weak-50/90 font-semibold">
+              <Table.Head className="text-right w-28 bg-bg-weak-50/90 font-semibold px-3">
                 Annual Target
               </Table.Head>
             </Table.Row>
           </Table.Header>
 
-          <Table.Body spacing={0}>
+          <Table.Body>
             {activeCategories.length === 0 ? (
               <Table.Row>
                 <Table.Cell colSpan={14} className="h-32 text-center text-text-sub-600">

@@ -30,7 +30,7 @@ export default function DashboardPage() {
     Boolean(report) && (report!.summary.planMinor !== '0' || report!.summary.actualMinor !== '0');
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
       <PageHeader
         icon={<RiDashboardLine className="size-5" aria-hidden="true" />}
         title="Financial Overview"

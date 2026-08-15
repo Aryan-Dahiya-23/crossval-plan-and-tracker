@@ -5,7 +5,7 @@ import { PlanningGrid } from '@/src/components/planning/planning-grid';
 
 export default function PlanningPage() {
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
       <PageHeader
         icon={<RiCalendarTodoLine className="size-5" aria-hidden="true" />}
         title="Planning"

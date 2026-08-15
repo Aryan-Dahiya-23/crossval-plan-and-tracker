@@ -110,7 +110,7 @@ export function ActualsTable() {
         onOpenImportModal={handleOpenImport}
       />
 
-      <div className="overflow-hidden rounded-2xl bg-bg-white shadow-regular-xs ring-1 ring-inset ring-stroke-soft-200">
+      <div className="overflow-hidden rounded-2xl bg-bg-white shadow-regular-xs border border-stroke-soft-200">
         <Table.Root>
           <Table.Header>
             <Table.Row>
@@ -122,7 +122,7 @@ export function ActualsTable() {
             </Table.Row>
           </Table.Header>
 
-          <Table.Body spacing={0}>
+          <Table.Body>
             {isLoadingActuals ? (
               <TableLoadingState message="Loading expense transactions..." colSpan={5} />
             ) : filteredActuals.length === 0 ? (

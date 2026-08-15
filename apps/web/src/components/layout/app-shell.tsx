@@ -248,7 +248,7 @@ export function AppShell({ children }: Readonly<{ children: ReactNode }>) {
   };
 
   return (
-    <div className="min-h-screen bg-bg-white">
+    <div className="min-h-screen bg-bg-weak-50/60">
       <Sidebar
         collapsed={collapsed}
         onOpenCategories={() => setCategoriesOpen(true)}
@@ -261,7 +261,9 @@ export function AppShell({ children }: Readonly<{ children: ReactNode }>) {
         )}
       >
         <MobileHeader onOpenCategories={() => setCategoriesOpen(true)} />
-        <main className="mx-auto w-full max-w-[1440px]">{children}</main>
+        <main className="mx-auto w-full max-w-[1220px] px-6 py-6 sm:px-8 sm:py-8 lg:px-10 lg:py-8">
+          {children}
+        </main>
       </div>
 
       <CategoryDrawer open={categoriesOpen} onOpenChange={setCategoriesOpen} />

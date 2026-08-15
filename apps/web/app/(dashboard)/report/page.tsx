@@ -24,7 +24,7 @@ export default function ReportPage() {
   });
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
       <PageHeader
         icon={<RiBarChartBoxLine className="size-5" aria-hidden="true" />}
         title="Plan vs Actual Report"

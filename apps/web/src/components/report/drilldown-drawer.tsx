@@ -115,7 +115,7 @@ function DrilldownContent({ target }: { target: DrilldownTarget }) {
               </Table.Row>
             </Table.Header>
 
-            <Table.Body spacing={0}>
+            <Table.Body>
               {isLoading ? (
                 <TableLoadingState message="Loading transactions..." colSpan={3} />
               ) : transactions.length === 0 ? (

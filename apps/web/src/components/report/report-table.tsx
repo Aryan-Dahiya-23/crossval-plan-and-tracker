@@ -27,7 +27,7 @@ export function ReportTable({ report }: ReportTableProps) {
 
   return (
     <div className="space-y-4">
-      <div className="overflow-hidden rounded-2xl bg-bg-white shadow-regular-xs ring-1 ring-inset ring-stroke-soft-200">
+      <div className="overflow-hidden rounded-2xl bg-bg-white shadow-regular-xs border border-stroke-soft-200">
         <Table.Root>
           <Table.Header>
             <Table.Row>
@@ -40,7 +40,7 @@ export function ReportTable({ report }: ReportTableProps) {
             </Table.Row>
           </Table.Header>
 
-          <Table.Body spacing={0}>
+          <Table.Body>
             {report.categories.length === 0 ? (
               <Table.Row>
                 <Table.Cell colSpan={6} className="h-48 text-center text-text-sub-600">

@@ -298,7 +298,7 @@ export function CsvImportModal({ onOpenChange, open }: CsvImportModalProps) {
                     </Table.Row>
                   </Table.Header>
 
-                  <Table.Body spacing={0}>
+                  <Table.Body>
                     {parsedRows.map((row, idx) => (
                       <Table.Row
                         key={idx}

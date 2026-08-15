@@ -40,7 +40,7 @@ export function Brand({
         <span className="min-w-0 leading-tight">
           <span
             className={cn(
-              'block truncate text-label-sm',
+              'block truncate text-label-sm font-semibold',
               inverse ? 'text-white' : 'text-text-strong-950',
             )}
           >

@@ -51,47 +51,59 @@ export function KPICards({
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {/* 1. Planned Budget */}
-      <WidgetBox.Root className="space-y-3">
+      <WidgetBox.Root className="space-y-3 transition-shadow duration-200 hover:shadow-regular-sm">
         <div className="flex items-center justify-between">
-          <span className="text-label-sm font-medium text-text-sub-600">Total Planned</span>
-          <span className="grid size-9 place-items-center rounded-xl bg-bg-weak-50 text-text-sub-600 ring-1 ring-inset ring-stroke-soft-200">
-            <RiCalendarCheckLine className="size-4" />
+          <span className="text-subheading-xs uppercase font-semibold tracking-wider text-text-sub-600">
+            Total Planned
+          </span>
+          <span className="grid size-9 place-items-center rounded-xl bg-primary-lighter text-primary-base ring-1 ring-inset ring-primary-base/20">
+            <RiCalendarCheckLine className="size-4.5" />
           </span>
         </div>
         <div className="space-y-1">
-          <div className="text-title-h4 font-medium tabular-nums text-text-strong">
+          <div className="text-title-h4 font-semibold tabular-nums text-text-strong tracking-tight sm:text-title-h3">
             {formatCentsToDollars(planMinor)}
           </div>
-          <p className="text-paragraph-xs text-text-soft-400">Budgeted target for period</p>
+          <p className="text-paragraph-xs text-text-sub-600">Budgeted target for period</p>
         </div>
       </WidgetBox.Root>
 
       {/* 2. Actual Spend */}
-      <WidgetBox.Root className="space-y-3">
+      <WidgetBox.Root className="space-y-3 transition-shadow duration-200 hover:shadow-regular-sm">
         <div className="flex items-center justify-between">
-          <span className="text-label-sm font-medium text-text-sub-600">Actual Spend</span>
-          <span className="grid size-9 place-items-center rounded-xl bg-bg-weak-50 text-text-sub-600 ring-1 ring-inset ring-stroke-soft-200">
-            <RiWallet3Line className="size-4" />
+          <span className="text-subheading-xs uppercase font-semibold tracking-wider text-text-sub-600">
+            Actual Spend
+          </span>
+          <span className="grid size-9 place-items-center rounded-xl bg-amber-50 text-amber-600 ring-1 ring-inset ring-amber-500/20">
+            <RiWallet3Line className="size-4.5" />
           </span>
         </div>
         <div className="space-y-1">
-          <div className="text-title-h4 font-medium tabular-nums text-text-strong">
+          <div className="text-title-h4 font-semibold tabular-nums text-text-strong tracking-tight sm:text-title-h3">
             {formatCentsToDollars(actualMinor)}
           </div>
-          <p className="text-paragraph-xs text-text-soft-400">Recorded expenses to date</p>
+          <p className="text-paragraph-xs text-text-sub-600">Recorded expenses to date</p>
         </div>
       </WidgetBox.Root>
 
       {/* 3. Net Dollar Variance */}
-      <WidgetBox.Root className="space-y-3">
+      <WidgetBox.Root className="space-y-3 transition-shadow duration-200 hover:shadow-regular-sm">
         <div className="flex items-center justify-between">
-          <span className="text-label-sm font-medium text-text-sub-600">Net Variance ($)</span>
-          <span className="grid size-9 place-items-center rounded-xl bg-bg-weak-50 text-text-sub-600 ring-1 ring-inset ring-stroke-soft-200">
-            <RiScales3Line className="size-4" />
+          <span className="text-subheading-xs uppercase font-semibold tracking-wider text-text-sub-600">
+            Net Variance ($)
+          </span>
+          <span
+            className={`grid size-9 place-items-center rounded-xl ring-1 ring-inset ${
+              isOverBudget
+                ? 'bg-rose-50 text-rose-600 ring-rose-500/20'
+                : 'bg-emerald-50 text-emerald-600 ring-emerald-500/20'
+            }`}
+          >
+            <RiScales3Line className="size-4.5" />
           </span>
         </div>
-        <div className="space-y-1">
-          <div className="text-title-h4 font-medium tabular-nums text-text-strong">
+        <div className="space-y-1.5">
+          <div className="text-title-h4 font-semibold tabular-nums text-text-strong tracking-tight sm:text-title-h3">
             {varianceBigInt > 0n
               ? `+${formatCentsToDollars(varianceMinor)}`
               : formatCentsToDollars(varianceMinor)}
@@ -110,18 +122,20 @@ export function KPICards({
       </WidgetBox.Root>
 
       {/* 4. Variance Rate (%) */}
-      <WidgetBox.Root className="space-y-3">
+      <WidgetBox.Root className="space-y-3 transition-shadow duration-200 hover:shadow-regular-sm">
         <div className="flex items-center justify-between">
-          <span className="text-label-sm font-medium text-text-sub-600">Variance Rate (%)</span>
-          <span className="grid size-9 place-items-center rounded-xl bg-bg-weak-50 text-text-sub-600 ring-1 ring-inset ring-stroke-soft-200">
-            <RiPercentLine className="size-4" />
+          <span className="text-subheading-xs uppercase font-semibold tracking-wider text-text-sub-600">
+            Variance Rate (%)
+          </span>
+          <span className="grid size-9 place-items-center rounded-xl bg-purple-50 text-purple-600 ring-1 ring-inset ring-purple-500/20">
+            <RiPercentLine className="size-4.5" />
           </span>
         </div>
         <div className="space-y-1">
-          <div className="text-title-h4 font-medium tabular-nums text-text-strong">
+          <div className="text-title-h4 font-semibold tabular-nums text-text-strong tracking-tight sm:text-title-h3">
             {variancePercent !== null ? variancePercent : 'N/A'}
           </div>
-          <p className="text-paragraph-xs text-text-soft-400">
+          <p className="text-paragraph-xs text-text-sub-600">
             {overPlanCategoryCount > 0
               ? `${overPlanCategoryCount} category over budget`
               : 'All categories on track'}
@@ -131,4 +145,5 @@ export function KPICards({
     </div>
   );
 }
+
 export default KPICards;

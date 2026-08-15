@@ -209,48 +209,54 @@ export function ReportTable({ report }: ReportTableProps) {
                 );
               })
             )}
-          </Table.Body>
-        </Table.Root>
 
-        {/* Grand Total Footer */}
-        {report.categories.length > 0 && (
-          <div className="flex items-center justify-between border-t-2 border-stroke-soft-200 bg-bg-weak-50 px-6 py-4 font-bold text-text-strong">
-            <span className="text-label-md font-bold">GRAND TOTAL</span>
-            <div className="flex items-center gap-8 text-label-md">
-              <div>
-                <span className="text-paragraph-xs text-text-sub-600 block">Plan</span>
-                <span className="tabular-nums font-semibold">
+            {/* Grand Total Row perfectly aligned to table columns */}
+            {report.categories.length > 0 && (
+              <Table.Row className="border-t-2 border-stroke-soft-200 bg-bg-weak-50 font-bold text-text-strong text-label-sm">
+                <Table.Cell className="pl-6 font-bold uppercase tracking-wider text-text-strong">
+                  Grand Total
+                </Table.Cell>
+                <Table.Cell className="text-right tabular-nums font-bold">
                   {formatCentsToDollars(report.summary.planMinor)}
-                </span>
-              </div>
-              <div>
-                <span className="text-paragraph-xs text-text-sub-600 block">Actual</span>
-                <span className="tabular-nums font-semibold">
+                </Table.Cell>
+                <Table.Cell className="text-right tabular-nums font-bold">
                   {formatCentsToDollars(report.summary.actualMinor)}
-                </span>
-              </div>
-              <div>
-                <span className="text-paragraph-xs text-text-sub-600 block">Variance</span>
-                <span
+                </Table.Cell>
+                <Table.Cell
                   className={cn(
-                    'tabular-nums font-bold',
+                    'text-right tabular-nums font-bold',
                     BigInt(report.summary.varianceMinor) > 0n
                       ? 'text-error-base'
                       : 'text-success-base',
                   )}
                 >
-                  {formatCentsToDollars(report.summary.varianceMinor)}
-                </span>
-              </div>
-              <div>
-                <span className="text-paragraph-xs text-text-sub-600 block">Rate</span>
-                <span className="tabular-nums font-bold">
-                  {report.summary.variancePercent !== null ? report.summary.variancePercent : 'N/A'}
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
+                  {BigInt(report.summary.varianceMinor) > 0n
+                    ? `+${formatCentsToDollars(report.summary.varianceMinor)}`
+                    : formatCentsToDollars(report.summary.varianceMinor)}
+                </Table.Cell>
+                <Table.Cell className="text-right tabular-nums font-bold">
+                  {report.summary.variancePercent !== null ? (
+                    <StatusBadge.Root
+                      status={
+                        BigInt(report.summary.varianceMinor) === 0n
+                          ? 'neutral'
+                          : BigInt(report.summary.varianceMinor) > 0n
+                            ? 'unfavorable'
+                            : 'favorable'
+                      }
+                    >
+                      <StatusBadge.Dot />
+                      <span>{report.summary.variancePercent}</span>
+                    </StatusBadge.Root>
+                  ) : (
+                    <span className="text-text-soft-400 font-medium">N/A</span>
+                  )}
+                </Table.Cell>
+                <Table.Cell />
+              </Table.Row>
+            )}
+          </Table.Body>
+        </Table.Root>
       </div>
 
       <DrilldownDrawer open={drawerOpen} onOpenChange={setDrawerOpen} target={drilldownTarget} />

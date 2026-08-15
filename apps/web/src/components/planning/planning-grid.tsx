@@ -320,20 +320,32 @@ export function PlanningGrid() {
                 );
               })
             )}
+
+            {activeCategories.length > 0 && (
+              <Table.Row className="border-t-2 border-stroke-soft-200 bg-bg-weak-50/80 font-semibold text-text-strong">
+                <Table.Cell className="sticky left-0 z-10 bg-bg-weak-50 font-semibold text-text-strong">
+                  <span className="text-label-xs font-semibold text-text-strong uppercase tracking-wider">
+                    Total Budget
+                  </span>
+                </Table.Cell>
+                {months.map(({ key: month }) => {
+                  const monthSum = monthlyTotals.get(month) ?? 0n;
+                  return (
+                    <Table.Cell
+                      key={month}
+                      className="text-right px-2 py-3 font-semibold tabular-nums text-text-strong"
+                    >
+                      {formatCentsToDollars(monthSum.toString())}
+                    </Table.Cell>
+                  );
+                })}
+                <Table.Cell className="text-right px-2 py-3 font-bold tabular-nums text-primary-base bg-primary-lighter/40">
+                  {formatCentsToDollars(grandTotal.toString())}
+                </Table.Cell>
+              </Table.Row>
+            )}
           </Table.Body>
         </Table.Root>
-
-        {activeCategories.length > 0 && (
-          <div className="flex items-center justify-between border-t-2 border-stroke-soft-200 bg-bg-weak-50 px-6 py-3 font-semibold text-text-strong">
-            <span className="text-label-sm font-semibold">Total Budget</span>
-            <div className="flex items-center gap-4 text-label-sm">
-              <span className="text-paragraph-xs text-text-sub-600">Annual Sum:</span>
-              <span className="text-primary-base font-bold tabular-nums text-title-h6">
-                {formatCentsToDollars(grandTotal.toString())}
-              </span>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

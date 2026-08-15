@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { RiCheckLine, RiHistoryLine, RiSave3Line } from '@remixicon/react';
+import { RiCalendarLine, RiCheckLine, RiHistoryLine, RiSave3Line } from '@remixicon/react';
 
 import * as Button from '../ui/button';
 import * as FancyButton from '../ui/fancy-button';
@@ -27,12 +27,14 @@ export function PlanningHeader({
   const isDirty = dirtyCount > 0;
 
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-6">
-      <div>
-        <h1 className="text-title-h5 font-medium text-text-strong">Annual Planning Matrix</h1>
-        <p className="text-paragraph-sm text-text-sub-600">
-          Set monthly budget targets for each expense category across all 12 months.
-        </p>
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-2">
+      <div className="flex items-center gap-2 text-label-xs text-text-sub-600">
+        <span className="grid size-6 place-items-center rounded-md bg-bg-weak-50 text-text-sub-600 ring-1 ring-inset ring-stroke-soft-200">
+          <RiCalendarLine className="size-3.5" />
+        </span>
+        <span className="font-semibold text-text-strong">Fiscal Year {year}</span>
+        <span>•</span>
+        <span>12-Month Category Budget Matrix</span>
       </div>
 
       <div className="flex items-center gap-3">
@@ -76,12 +78,12 @@ export function PlanningHeader({
           ) : isDirty ? (
             <>
               <FancyButton.Icon as={RiSave3Line} />
-              <span>Save Targets ({dirtyCount})</span>
+              <span>Save Changes ({dirtyCount})</span>
             </>
           ) : (
             <>
               <FancyButton.Icon as={RiCheckLine} />
-              <span>Targets Saved</span>
+              <span>All Saved</span>
             </>
           )}
         </FancyButton.Root>
@@ -89,4 +91,5 @@ export function PlanningHeader({
     </div>
   );
 }
+
 export default PlanningHeader;

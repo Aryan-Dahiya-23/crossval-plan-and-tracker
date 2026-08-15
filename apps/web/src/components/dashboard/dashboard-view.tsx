@@ -39,109 +39,113 @@ export function DashboardView() {
 
       <ReviewerGuide />
 
-      <SampleDataCTA hasData={hasData} />
-
       {isLoading ? (
         <PageLoadingState
           message="Loading Financial Overview"
           subMessage="Fetching authoritative budget targets, expenses, and variance metrics..."
         />
-      ) : report ? (
-        <div className="space-y-6">
-          <KPICards
-            planMinor={report.summary.planMinor}
-            actualMinor={report.summary.actualMinor}
-            varianceMinor={report.summary.varianceMinor}
-            variancePercent={report.summary.variancePercent}
-            overPlanCategoryCount={report.summary.overPlanCategoryCount}
-          />
-
-          <SpendingChart monthlySeries={report.monthlySeries} />
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <Link
-              href="/planning"
-              onMouseEnter={() => prefetchRoute('/planning')}
-              onFocus={() => prefetchRoute('/planning')}
-              className="group block"
-            >
-              <WidgetBox className="p-5 transition-all duration-200 hover:shadow-regular-sm hover:border-stroke-sub-300">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <span className="grid size-9 place-items-center rounded-xl bg-primary-lighter text-primary-base ring-1 ring-inset ring-primary-base/20">
-                      <RiCalendarTodoLine className="size-4.5" />
-                    </span>
-                    <div>
-                      <h3 className="text-label-sm font-semibold text-text-strong group-hover:text-primary-base transition-colors">
-                        12-Month Planning
-                      </h3>
-                      <p className="text-paragraph-xs text-text-sub-600">
-                        Maintain annual spending targets
-                      </p>
-                    </div>
-                  </div>
-                  <RiArrowRightLine className="size-4 text-text-soft-400 group-hover:text-primary-base group-hover:translate-x-0.5 transition-all" />
-                </div>
-              </WidgetBox>
-            </Link>
-
-            <Link
-              href="/actuals"
-              onMouseEnter={() => prefetchRoute('/actuals')}
-              onFocus={() => prefetchRoute('/actuals')}
-              className="group block"
-            >
-              <WidgetBox className="p-5 transition-all duration-200 hover:shadow-regular-sm hover:border-stroke-sub-300">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <span className="grid size-9 place-items-center rounded-xl bg-amber-50 text-amber-600 ring-1 ring-inset ring-amber-500/20">
-                      <RiFileList3Line className="size-4.5" />
-                    </span>
-                    <div>
-                      <h3 className="text-label-sm font-semibold text-text-strong group-hover:text-amber-600 transition-colors">
-                        Actuals Ledger
-                      </h3>
-                      <p className="text-paragraph-xs text-text-sub-600">
-                        Record and audit expenses
-                      </p>
-                    </div>
-                  </div>
-                  <RiArrowRightLine className="size-4 text-text-soft-400 group-hover:text-amber-600 group-hover:translate-x-0.5 transition-all" />
-                </div>
-              </WidgetBox>
-            </Link>
-
-            <Link
-              href="/report"
-              onMouseEnter={() => prefetchRoute('/report')}
-              onFocus={() => prefetchRoute('/report')}
-              className="group block"
-            >
-              <WidgetBox className="p-5 transition-all duration-200 hover:shadow-regular-sm hover:border-stroke-sub-300">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <span className="grid size-9 place-items-center rounded-xl bg-emerald-50 text-emerald-600 ring-1 ring-inset ring-emerald-500/20">
-                      <RiLineChartLine className="size-4.5" />
-                    </span>
-                    <div>
-                      <h3 className="text-label-sm font-semibold text-text-strong group-hover:text-emerald-600 transition-colors">
-                        Plan vs Actual Report
-                      </h3>
-                      <p className="text-paragraph-xs text-text-sub-600">
-                        Analyze variances and locks
-                      </p>
-                    </div>
-                  </div>
-                  <RiArrowRightLine className="size-4 text-text-soft-400 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition-all" />
-                </div>
-              </WidgetBox>
-            </Link>
-          </div>
-        </div>
       ) : (
-        <WidgetBox className="p-8 text-center text-text-sub-600">
-          Unable to load financial dashboard metrics.
-        </WidgetBox>
+        <>
+          <SampleDataCTA hasData={hasData} isLoading={isLoading} />
+
+          {report ? (
+            <div className="space-y-6">
+              <KPICards
+                planMinor={report.summary.planMinor}
+                actualMinor={report.summary.actualMinor}
+                varianceMinor={report.summary.varianceMinor}
+                variancePercent={report.summary.variancePercent}
+                overPlanCategoryCount={report.summary.overPlanCategoryCount}
+              />
+
+              <SpendingChart monthlySeries={report.monthlySeries} />
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <Link
+                  href="/planning"
+                  onMouseEnter={() => prefetchRoute('/planning')}
+                  onFocus={() => prefetchRoute('/planning')}
+                  className="group block"
+                >
+                  <WidgetBox className="p-5 transition-all duration-200 hover:shadow-regular-sm hover:border-stroke-sub-300">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <span className="grid size-9 place-items-center rounded-xl bg-primary-lighter text-primary-base ring-1 ring-inset ring-primary-base/20">
+                          <RiCalendarTodoLine className="size-4.5" />
+                        </span>
+                        <div>
+                          <h3 className="text-label-sm font-semibold text-text-strong group-hover:text-primary-base transition-colors">
+                            12-Month Planning
+                          </h3>
+                          <p className="text-paragraph-xs text-text-sub-600">
+                            Maintain annual spending targets
+                          </p>
+                        </div>
+                      </div>
+                      <RiArrowRightLine className="size-4 text-text-soft-400 group-hover:text-primary-base group-hover:translate-x-0.5 transition-all" />
+                    </div>
+                  </WidgetBox>
+                </Link>
+
+                <Link
+                  href="/actuals"
+                  onMouseEnter={() => prefetchRoute('/actuals')}
+                  onFocus={() => prefetchRoute('/actuals')}
+                  className="group block"
+                >
+                  <WidgetBox className="p-5 transition-all duration-200 hover:shadow-regular-sm hover:border-stroke-sub-300">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <span className="grid size-9 place-items-center rounded-xl bg-amber-50 text-amber-600 ring-1 ring-inset ring-amber-500/20">
+                          <RiFileList3Line className="size-4.5" />
+                        </span>
+                        <div>
+                          <h3 className="text-label-sm font-semibold text-text-strong group-hover:text-amber-600 transition-colors">
+                            Actuals Ledger
+                          </h3>
+                          <p className="text-paragraph-xs text-text-sub-600">
+                            Record and audit expenses
+                          </p>
+                        </div>
+                      </div>
+                      <RiArrowRightLine className="size-4 text-text-soft-400 group-hover:text-amber-600 group-hover:translate-x-0.5 transition-all" />
+                    </div>
+                  </WidgetBox>
+                </Link>
+
+                <Link
+                  href="/report"
+                  onMouseEnter={() => prefetchRoute('/report')}
+                  onFocus={() => prefetchRoute('/report')}
+                  className="group block"
+                >
+                  <WidgetBox className="p-5 transition-all duration-200 hover:shadow-regular-sm hover:border-stroke-sub-300">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <span className="grid size-9 place-items-center rounded-xl bg-emerald-50 text-emerald-600 ring-1 ring-inset ring-emerald-500/20">
+                          <RiLineChartLine className="size-4.5" />
+                        </span>
+                        <div>
+                          <h3 className="text-label-sm font-semibold text-text-strong group-hover:text-emerald-600 transition-colors">
+                            Plan vs Actual Report
+                          </h3>
+                          <p className="text-paragraph-xs text-text-sub-600">
+                            Analyze variances and locks
+                          </p>
+                        </div>
+                      </div>
+                      <RiArrowRightLine className="size-4 text-text-soft-400 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition-all" />
+                    </div>
+                  </WidgetBox>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <WidgetBox className="p-8 text-center text-text-sub-600">
+              Unable to load financial dashboard metrics.
+            </WidgetBox>
+          )}
+        </>
       )}
     </div>
   );

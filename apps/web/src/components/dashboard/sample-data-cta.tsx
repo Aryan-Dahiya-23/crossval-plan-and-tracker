@@ -9,7 +9,13 @@ import * as Button from '../ui/button';
 import { useToast } from '../ui/toast';
 import * as WidgetBox from '../ui/widget-box';
 
-export function SampleDataCTA({ hasData }: { hasData: boolean }) {
+export function SampleDataCTA({
+  hasData,
+  isLoading = false,
+}: {
+  hasData: boolean;
+  isLoading?: boolean;
+}) {
   const demoMutation = useLoadDemoSample();
   const toast = useToast();
 
@@ -30,8 +36,8 @@ export function SampleDataCTA({ hasData }: { hasData: boolean }) {
     });
   };
 
-  // Automatically hide the card as soon as the account contains data
-  if (hasData) {
+  // Automatically hide the card while data is loading or if the account already contains records
+  if (isLoading || hasData) {
     return null;
   }
 

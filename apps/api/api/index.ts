@@ -1,8 +1,8 @@
 import type { Request, Response } from 'express';
 import type mongoose from 'mongoose';
 
-import { createApp } from './app.js';
-import { connectDatabase } from './database/connection.js';
+import { createApp } from '../src/app.js';
+import { connectDatabase } from '../src/database/connection.js';
 
 let cachedDbPromise: Promise<typeof mongoose> | null = null;
 let cachedApp: ReturnType<typeof createApp> | null = null;

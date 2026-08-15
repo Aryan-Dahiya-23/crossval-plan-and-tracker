@@ -32,7 +32,7 @@ export default function DashboardPage() {
   return (
     <div className="p-6 space-y-6">
       <PageHeader
-        icon={<RiDashboardLine className="size-6" aria-hidden="true" />}
+        icon={<RiDashboardLine className="size-5" aria-hidden="true" />}
         title="Financial Overview"
         description="Authoritative executive metrics, budget targets, actual spend, and net variance."
       />

@@ -67,8 +67,21 @@ export function createApp(config: AppConfig = {}): Express {
   // 7. Extract & validate session if present (non-blocking)
   app.use(authenticate);
 
-  // 8. Health checks
-  // 8a. Liveness probe (does not check database; proves process is responding)
+  // 8. Health and Info endpoints
+  // 8a. Root info endpoint
+  app.get('/', (_req: Request, res: Response) => {
+    res.status(200).json({
+      service: 'crossval-api',
+      version: '1.0.0',
+      status: 'ok',
+      endpoints: {
+        health: '/health/ready',
+        api: '/v1',
+      },
+    });
+  });
+
+  // 8b. Liveness probe (does not check database; proves process is responding)
   app.get('/health/live', (_req: Request, res: Response) => {
     const payload = healthResponseSchema.parse({
       service: 'api',
@@ -78,7 +91,7 @@ export function createApp(config: AppConfig = {}): Express {
     res.status(200).json(payload);
   });
 
-  // 8b. Readiness probe (verifies database connectivity)
+  // 8c. Readiness probe (verifies database connectivity)
   app.get('/health/ready', (_req: Request, res: Response) => {
     const connected = isDatabaseConnected();
     const statusCode = connected ? 200 : 503;

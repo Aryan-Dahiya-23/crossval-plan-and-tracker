@@ -2,7 +2,7 @@
 
 ## Implementation status
 
-Phase 10 is complete. The repository now contains the shared design tokens and primitives, provider composition, separate public/dashboard layouts, responsive application shell, centralized query keys, and typed API client described in this document. Login/signup forms, session guards, user/logout controls, categories, and all financial workflows remain assigned to later roadmap phases.
+Phases 0–17 and the Batch CSV Actuals Import stretch goal are 100% complete and deployed live. The web application features a full suite of Align UI primitives, complete authentication flows (`/login`, `/signup`, `AuthGuard`), collapsible dual-state sidebar shell, Category Management Drawer (`CategoryDrawer`), 12-Month Annual Planning Matrix (`PlanningGrid`), Actuals Expense Ledger (`ActualsTable`, `ExpenseDrawer`, `CsvImportModal`), Executive Dashboard (`/dashboard` with KPI cards, SpendingChart, and SampleData CTA), authoritative Plan vs Actual Report (`/report` with `DrilldownDrawer`, `LockPeriodModal`, CSV export), React Query hover/focus route prefetching, and smooth Align UI loading states.
 
 ## 1. Product direction
 

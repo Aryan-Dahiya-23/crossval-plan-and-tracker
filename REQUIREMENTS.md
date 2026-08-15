@@ -82,6 +82,14 @@ The assignment permits any stack, so using MongoDB does not conflict with it.
 - The sample produces the assignment's expected report values.
 - The action is idempotent or rejected clearly after data exists.
 
+### Batch CSV actuals import (Implemented)
+
+- A user can upload or paste a CSV file of actual expenses.
+- The UI provides a downloadable standard template (`month,category,amount,note`).
+- Client-side parser performs pre-submission syntax and schema validation.
+- Live validation error table highlights missing categories, invalid amounts, or malformed dates.
+- Atomic backend transaction creates up to 500 expense records atomically, rejecting writes if any target month is locked.
+
 ## 4. Calculation requirements
 
 ```text

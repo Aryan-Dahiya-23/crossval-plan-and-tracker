@@ -220,6 +220,45 @@ May update category, month, amount, or note. If the month changes, both source a
 
 Deletes an owned actual from an open month. Response: `204`.
 
+### `POST /v1/actuals/import`
+
+Batch creates actual expense entries from a structured payload (derived from CSV file parsing).
+
+Request:
+
+```json
+{
+  "entries": [
+    {
+      "month": "2026-01",
+      "categoryName": "Marketing",
+      "amountMinor": "200000",
+      "note": "Google Ads Retainer"
+    }
+  ]
+}
+```
+
+Behavior:
+
+- Maximum 500 entries per batch payload.
+- Validates active category ownership by name (case-insensitive trim match).
+- Validates that target months are open (rejects with `409 PERIOD_LOCKED` if any target month is locked).
+- Creates all valid expense items atomically within a single MongoDB transaction.
+
+Response: `201` with created actual documents and summary counts:
+
+```json
+{
+  "data": {
+    "createdCount": 1,
+    "actuals": [ ... ]
+  }
+}
+```
+
+Errors: `VALIDATION_ERROR`, `CATEGORY_NOT_FOUND`, `CATEGORY_ARCHIVED`, `PERIOD_LOCKED`.
+
 ## 7. Report
 
 ### `GET /v1/reports/plan-vs-actual`
@@ -342,7 +381,5 @@ No general idempotency-key system is included initially.
 - Plan `PUT` is naturally idempotent.
 - Plan deletion and logout are safe to repeat.
 - Period re-lock returns a stable conflict.
-- Actual creation is not automatically retried.
+- Actual creation and batch CSV import are transactional.
 - UI disables repeated submission while pending.
-
-CSV import would require a separate idempotency/duplicate policy before implementation.

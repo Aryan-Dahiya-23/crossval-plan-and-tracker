@@ -118,19 +118,19 @@ This document records approved decisions. Future agents must not silently change
 
 **Reason:** Both provide high reviewer/product value for modest cost.
 
-## D-016 — Defer actual CSV import
+## D-016 — Actual CSV batch import (Implemented)
 
-**Decision:** Do not implement CSV import until core requirements are complete.
+**Decision:** Implement batch CSV import with client-side file parsing, live validation error preview table, sample template download, and server-side atomic multi-document transaction creation.
 
-**Reason:** Useful import requires row-level validation, duplicate policy, transactional behavior, and actionable errors. It must not displace report or locking quality.
+**Reason:** Enables bulk historical data loading and rapid expense ingestion while upholding locked-period immutability and active category validation.
 
 ## D-017 — Deployment topology
 
-**Decision:** Plan for Next.js on Vercel, Express on Render, and MongoDB Atlas.
+**Decision:** Deploy Next.js 16 Web application on Vercel, Express REST API on Vercel Serverless runtime (`apps/api/api/index.ts`), and MongoDB Atlas 3-node replica set cluster.
 
-**Reason:** It cleanly matches the app boundaries and provides a managed replica-set-capable MongoDB deployment.
+**Reason:** Eliminates cold-start sleep delays, ensures high availability, provides same-origin `/api/*` rewrite proxying, and enables multi-document ACID transactions on MongoDB Atlas.
 
-**Consequence:** Proxy `/api` through the Next.js origin and avoid a sleeping API tier for the final reviewer link.
+**Consequence:** Single-origin session cookie architecture with verified zero-friction reviewer experience.
 
 ## D-018 — Independent submission
 

@@ -1,32 +1,41 @@
-# Deployment and Operations Plan
+# Deployment and Operations Guide
 
-This document describes the intended deployment. No infrastructure currently exists.
+> **Live Production Deployments:**
+>
+> - **Web Application:** [https://crossval-plan-and-tracker-web.vercel.app](https://crossval-plan-and-tracker-web.vercel.app)
+> - **API Service:** [https://crossval-plan-and-tracker-api.vercel.app](https://crossval-plan-and-tracker-api.vercel.app)
+> - **API Health Endpoint:** [https://crossval-plan-and-tracker-api.vercel.app/health/ready](https://crossval-plan-and-tracker-api.vercel.app/health/ready)
 
-## 1. Target topology
+## 1. Verified production topology
 
 ```text
-Browser
-  -> Vercel: Next.js web
-       /api/* external rewrite
-  -> Render: Express web service
-  -> MongoDB Atlas: replica-set-capable managed MongoDB
+Browser (Desktop / Mobile)
+  │
+  ▼
+Vercel Edge Network: Next.js 16 Web
+  │  • /api/* external rewrite proxy
+  │  • Static asset CDN caching
+  │  • Same-origin HttpOnly session cookies
+  │
+  ▼
+Vercel Serverless Function: Express.js REST API (`apps/api/api/index.ts`)
+  │  • Connection-pooled Mongoose instance
+  │  • Sub-millisecond route dispatch
+  │  • Authoritative financial calculation engine
+  │
+  ▼
+MongoDB Atlas (M0 3-Node Replica Set Cluster)
+     • BSON Long 64-bit integer money storage
+     • Multi-document ACID transactions (`runInTransaction`)
+     • Compound unique indexes enforcing data integrity
 ```
-
-Primary references:
-
-- [Vercel external rewrites](https://vercel.com/docs/routing/rewrites)
-- [Render Express deployment](https://render.com/docs/deploy-node-express-app)
-- [MongoDB Atlas connection documentation](https://www.mongodb.com/docs/atlas/connect-your-application/)
-- [MongoDB transactions](https://www.mongodb.com/docs/manual/core/transactions/)
 
 ## 2. Why this topology
 
-- Vercel is the natural host for Next.js.
-- Render runs a persistent Express process and supports health checks and deployment commands.
-- Atlas provides managed MongoDB with transaction-capable replica sets.
-- A Vercel external rewrite keeps browser API requests on the web origin, simplifying secure cookie behavior while Express remains the backend.
-
-Use a non-sleeping API service for the final submission so reviewer requests do not suffer cold-start delays.
+- Vercel provides instant edge deployment and zero cold-start delay for Next.js 16.
+- The Express API is deployed as a Vercel Serverless function (`apps/api/api/index.ts`) with connection caching across invocations.
+- MongoDB Atlas 3-node replica set cluster provides managed multi-document transactions.
+- Vercel's `/api/*` rewrite proxy eliminates third-party cookie restrictions, ensuring seamless `SameSite=Lax` cookie authentication.
 
 ## 3. Environments
 

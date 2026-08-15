@@ -18,7 +18,7 @@
 
 - Updated `README.md` with live production URLs, quick-start guide, architectural overview, calculation rules, indexing/scaling strategy, and reviewer workflow.
 - Verified all assignment requirements against `plan-vs-actual-tracker.pdf`.
-- All 326 tests pass across contracts, API, and frontend suites.
+- All 327 tests pass across contracts, API, and frontend suites.
 
 ## Stretch Goal — CSV Actuals Batch Import (Implemented)
 

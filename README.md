@@ -61,7 +61,7 @@ pnpm check
 pnpm test
 ```
 
-All **326 automated unit, integration, and security tests** pass with 100% code coverage across all business domains.
+All **327 automated unit, integration, and security tests** pass with 100% code coverage across all business domains.
 
 ---
 
